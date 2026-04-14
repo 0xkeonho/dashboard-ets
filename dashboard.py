@@ -333,48 +333,23 @@ if missing_files:
 # ==========================================
 # 6. SIDEBAR (NAVIGATION & FILTERS)
 # ==========================================
-st.sidebar.markdown(
-    """
-    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem;">
-        <span class="material-symbols-rounded" style="font-size: 28px; color: #f1f5f9;">local_hospital</span>
-        <h1 style="margin: 0; font-size: 1.5rem; color: #f1f5f9; font-family: 'Poppins', sans-serif; font-weight: 700;">MGH Analytics</h1>
-    </div>
-    <p style="margin: 0; color: #94a3b8; font-size: 0.85rem; font-family: 'Poppins', sans-serif;">Massachusetts General Hospital</p>
-""",
-    unsafe_allow_html=True,
-)
+st.sidebar.title(":material/local_hospital: MGH Analytics")
+st.sidebar.caption("Massachusetts General Hospital")
 st.sidebar.divider()
 
-st.sidebar.markdown(
-    '<p style="color: #94a3b8; font-size: 0.75rem; font-family: Poppins, sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Navigation</p>',
-    unsafe_allow_html=True,
+page = st.sidebar.radio(
+    "Navigation",
+    [
+        ":material/dashboard: Dashboard Overview",
+        ":material/swap_horiz: Encounters Analysis",
+        ":material/payments: Financials & Coverage",
+        ":material/groups: Patient Behavior",
+    ],
 )
-
-nav_options = [
-    ("dashboard", "Dashboard Overview"),
-    ("swap_horiz", "Encounters Analysis"),
-    ("payments", "Financials & Coverage"),
-    ("groups", "Patient Behavior"),
-]
-
-selected_page = st.sidebar.radio(
-    " ",
-    [label for _, label in nav_options],
-)
-
-page = selected_page
 
 st.sidebar.divider()
 
-st.sidebar.markdown(
-    """
-    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 0.5rem;">
-        <span class="material-symbols-rounded" style="font-size: 20px; color: #f1f5f9;">tune</span>
-        <h3 style="margin: 0; color: #f1f5f9; font-family: 'Poppins', sans-serif; font-weight: 600;">Data Filters</h3>
-    </div>
-""",
-    unsafe_allow_html=True,
-)
+st.sidebar.subheader(":material/tune: Data Filters")
 
 # 1. Year Filter
 min_year = int(encounters["YEAR"].min())
@@ -454,7 +429,7 @@ if filtered_encounters.empty:
 # ----------------------------------------
 # PAGE 1: OVERVIEW
 # ----------------------------------------
-if page == "Dashboard Overview":
+if page == ":material/dashboard: Dashboard Overview":
     st.markdown("<h1>Hospital Analytics Dashboard</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Performance Overview (Filtered Data)</div>",
@@ -508,7 +483,7 @@ if page == "Dashboard Overview":
 # ----------------------------------------
 # PAGE 2: ENCOUNTERS (SQL OBJECTIVE 1)
 # ----------------------------------------
-elif page == "Encounters Analysis":
+elif page == ":material/swap_horiz: Encounters Analysis":
     st.markdown("<h1>Encounters & Visits</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Volume trends, service proportions, and durations.<br/><em>📋 SQL Objective 1: Encounters Overview</em></div>",
@@ -594,7 +569,7 @@ elif page == "Encounters Analysis":
 # ----------------------------------------
 # PAGE 3: COST & COVERAGE (SQL OBJECTIVE 2)
 # ----------------------------------------
-elif page == "Financials & Coverage":
+elif page == ":material/payments: Financials & Coverage":
     st.markdown("<h1>Financials & Procedures</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Insurance coverage and procedure cost mapping.<br/><em>📋 SQL Objective 2: Cost & Coverage Insights</em></div>",
@@ -776,7 +751,7 @@ elif page == "Financials & Coverage":
 # ----------------------------------------
 # PAGE 4: PATIENT BEHAVIOR (SQL OBJECTIVE 3)
 # ----------------------------------------
-elif page == "Patient Behavior":
+elif page == ":material/groups: Patient Behavior":
     st.markdown("<h1>Patient Behavior Analytics</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Tracking unique patients and readmission trends.<br/><em>📋 SQL Objective 3: Patient Behavior Analysis</em></div>",
