@@ -6,12 +6,6 @@ from utils import (
 )
 from streamlit_echarts import st_echarts, JsCode
 
-st.set_page_config(
-    page_title="Financials & Coverage - MGH Analytics",
-    page_icon=":material/payments:",
-    layout="wide",
-)
-
 filtered_encounters = st.session_state.get("filtered_encounters")
 filtered_procedures = st.session_state.get("filtered_procedures")
 

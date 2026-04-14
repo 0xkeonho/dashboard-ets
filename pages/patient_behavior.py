@@ -9,12 +9,6 @@ from utils import (
 )
 from streamlit_echarts import st_echarts, JsCode
 
-st.set_page_config(
-    page_title="Patient Behavior - MGH Analytics",
-    page_icon=":material/groups:",
-    layout="wide",
-)
-
 filtered_encounters = st.session_state.get("filtered_encounters")
 patients = st.session_state.get("patients")
 

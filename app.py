@@ -17,6 +17,32 @@ if missing_files:
     st.error(f"CSV files not found: {', '.join(missing_files)}")
     st.stop()
 
+pg = st.navigation(
+    [
+        st.Page(
+            "pages/dashboard_overview.py",
+            title="Dashboard Overview",
+            icon=":material/dashboard:",
+            default=True,
+        ),
+        st.Page(
+            "pages/encounters_analysis.py",
+            title="Encounters Analysis",
+            icon=":material/swap_horiz:",
+        ),
+        st.Page(
+            "pages/financials_coverage.py",
+            title="Financials & Coverage",
+            icon=":material/payments:",
+        ),
+        st.Page(
+            "pages/patient_behavior.py",
+            title="Patient Behavior",
+            icon=":material/groups:",
+        ),
+    ]
+)
+
 with st.sidebar:
     st.title(":material/local_hospital: MGH Analytics")
     st.caption("Massachusetts General Hospital")
@@ -50,29 +76,4 @@ st.session_state["filtered_procedures"] = filtered_procedures
 st.session_state["patients"] = patients
 st.session_state["payers"] = payers
 
-pg = st.navigation(
-    [
-        st.Page(
-            "pages/dashboard_overview.py",
-            title="Dashboard Overview",
-            icon=":material/dashboard:",
-            default=True,
-        ),
-        st.Page(
-            "pages/encounters_analysis.py",
-            title="Encounters Analysis",
-            icon=":material/swap_horiz:",
-        ),
-        st.Page(
-            "pages/financials_coverage.py",
-            title="Financials & Coverage",
-            icon=":material/payments:",
-        ),
-        st.Page(
-            "pages/patient_behavior.py",
-            title="Patient Behavior",
-            icon=":material/groups:",
-        ),
-    ]
-)
 pg.run()

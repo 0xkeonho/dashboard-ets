@@ -9,12 +9,6 @@ from utils import (
 )
 from streamlit_echarts import st_echarts, JsCode
 
-st.set_page_config(
-    page_title="Encounters Analysis - MGH Analytics",
-    page_icon=":material/swap_horiz:",
-    layout="wide",
-)
-
 filtered_encounters = st.session_state.get("filtered_encounters")
 filtered_procedures = st.session_state.get("filtered_procedures")
 
