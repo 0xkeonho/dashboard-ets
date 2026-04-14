@@ -7,7 +7,6 @@ st.set_page_config(
     page_icon=":material/local_hospital:",
     layout="wide",
     initial_sidebar_state="expanded",
-    menu_items={"About": "Dashboard Dataset Case 2 - Project Dashboard ETS"},
 )
 
 st.markdown(CSS_STYLES, unsafe_allow_html=True)
