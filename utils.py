@@ -364,23 +364,15 @@ def calc_delta(current_val, previous_val):
 # 6. SIDEBAR FILTERS
 # ==========================================
 def render_sidebar_filters(encounters):
-    """Render sidebar filters and return filter values."""
-    st.sidebar.title(":material/local_hospital: MGH Analytics")
-    st.sidebar.caption("Massachusetts General Hospital")
-    st.sidebar.divider()
-
-    # Year Filter
     min_year = int(encounters["YEAR"].min())
     max_year = int(encounters["YEAR"].max())
     selected_years = st.sidebar.slider(
         "Year Range", min_year, max_year, (min_year, max_year)
     )
 
-    # Payer Filter
     all_payers = sorted(encounters["PAYER_NAME"].unique().tolist())
     selected_payers = st.sidebar.multiselect("Payer", all_payers, default=all_payers)
 
-    # Encounter Class Filter
     all_classes = sorted(encounters["ENCOUNTERCLASS"].unique().tolist())
     selected_classes = st.sidebar.multiselect(
         "Encounter Class", all_classes, default=all_classes
@@ -392,7 +384,7 @@ def render_sidebar_filters(encounters):
     )
     st.sidebar.divider()
     st.sidebar.markdown(
-        ":material/code: [streamlit-echarts](https://github.com/andfanilo/streamlit-echarts)"
+        ":material/code: [streamlit-echarts](https://github.com/0xkeonho/dashboard-ets/)"
     )
 
     return selected_years, selected_payers, selected_classes

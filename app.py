@@ -36,3 +36,8 @@ pg = st.navigation(
     ]
 )
 pg.run()
+
+with st.sidebar:
+    st.markdown(
+        ":material/code: [streamlit-echarts](https://github.com/0xkeonho/dashboard-ets/)"
+    )
