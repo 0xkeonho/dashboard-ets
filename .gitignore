@@ -11,6 +11,11 @@ output/
 *.pdf
 create_hospital_db.sql
 
+# Assignment answers (private)
+answers_hospital_analytics_questions.md
+Soal Kuis 2026.pdf
+hospital_analytics_questions.sql
+
 # Virtual environment
 venv/
 .venv/
