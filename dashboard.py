@@ -49,57 +49,32 @@ st.markdown(
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-    /* Material Icons - MUST BE FIRST with highest priority */
-    .material-icons,
-    .material-symbols-rounded,
-    span.material-symbols-rounded,
-    span[class*="material-symbols"],
-    [class*="material-symbols"] {
+    /* DO NOT TOUCH PLOTLY CHARTS */
+    .js-plotly-plot, .plotly, .modebar, .plot-container,
+    [data-testid="stPlotlyChart"], .stPlotlyChart {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+    }
+
+    /* Material Icons */
+    .material-icons, .material-symbols-rounded, span.material-symbols-rounded {
         font-family: 'Material Symbols Rounded' !important;
         font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
     }
 
-    /* Global Font (Poppins) - applied after Material Icons */
-    html, body, [class*="css"], [class*="st-"], p, div,
-    h1, h2, h3, h4, h5, h6, label, li, a, button, input, select,
-    textarea, th, td, code, pre, .stMarkdown, .stCaption, .stHeader,
-    .stMetric, .stDataFrame, .stPlotlyChart, .element-container {
+    /* Global Font (Poppins) - ONLY text elements */
+    html, body, p, h1, h2, h3, h4, h5, h6, label, li, a, button, th, td {
         font-family: 'Poppins', sans-serif !important;
     }
 
-    /* Regular spans (exclude Material icons) */
-    span:not(.material-symbols-rounded):not([class*="material"]) {
-        font-family: 'Poppins', sans-serif !important;
-    }
-
-    /* Sidebar Styling - Dark Theme */
-    section[data-testid="stSidebar"] {
-        background-color: #1e293b !important;
-    }
-    section[data-testid="stSidebar"] > div > div {
-        color: #f1f5f9 !important;
-    }
-    section[data-testid="stSidebar"] h1 {
-        color: #f1f5f9 !important;
-    }
-    section[data-testid="stSidebar"] h2 {
-        color: #f1f5f9 !important;
-    }
-    section[data-testid="stSidebar"] h3 {
-        color: #f1f5f9 !important;
-    }
-    section[data-testid="stSidebar"] h4 {
-        color: #f1f5f9 !important;
-    }
-    section[data-testid="stSidebar"] label {
-        color: #f1f5f9 !important;
-    }
-    section[data-testid="stSidebar"] p {
-        color: #f1f5f9 !important;
-    }
-    section[data-testid="stSidebar"] span:not(.material-symbols-rounded):not([class*="material"]) {
-        color: #f1f5f9 !important;
-    }
+    /* Sidebar - Dark Theme */
+    section[data-testid="stSidebar"] { background-color: #1e293b !important; }
+    section[data-testid="stSidebar"] > div > div { color: #f1f5f9 !important; }
+    section[data-testid="stSidebar"] h1 { color: #f1f5f9 !important; }
+    section[data-testid="stSidebar"] h2 { color: #f1f5f9 !important; }
+    section[data-testid="stSidebar"] h3 { color: #f1f5f9 !important; }
+    section[data-testid="stSidebar"] h4 { color: #f1f5f9 !important; }
+    section[data-testid="stSidebar"] label { color: #f1f5f9 !important; }
+    section[data-testid="stSidebar"] p { color: #f1f5f9 !important; }
     section[data-testid="stSidebar"] .stRadio > label {
         color: #f1f5f9 !important;
     }
