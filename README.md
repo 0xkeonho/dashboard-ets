@@ -4,19 +4,20 @@ Dashboard analitik untuk Massachusetts General Hospital.
 
 ## Cara Menjalankan
 
-1. Clone repository
+### Menggunakan uv (Recommended)
+
 ```bash
 git clone https://github.com/0xkeonho/dashboard-ets.git
 cd dashboard-ets
+uv run streamlit run app.py
 ```
 
-2. Install dependencies
+### Menggunakan pip
+
 ```bash
+git clone https://github.com/0xkeonho/dashboard-ets.git
+cd dashboard-ets
 pip install -r requirements.txt
-```
-
-3. Jalankan Streamlit
-```bash
 streamlit run app.py
 ```
 
