@@ -264,7 +264,6 @@ def load_data():
 def style_plotly(fig, add_zoom=False, x_title=None, y_title=None):
     fig.update_layout(
         font_family="Poppins",
-        title_font_family="Poppins",
         paper_bgcolor="rgba(255,255,255,0)",
         plot_bgcolor="rgba(255,255,255,0)",
         hoverlabel=dict(
