@@ -20,3 +20,4 @@ hospital_analytics_questions.sql
 venv/
 .venv/
 env/
+*.pdf
