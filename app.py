@@ -22,38 +22,34 @@ st.session_state["patients"] = patients
 st.session_state["payers"] = payers
 st.session_state["procedures"] = procedures
 
+PAGES = {
+    "Dashboard Overview": "pages/dashboard_overview.py",
+    "Encounters Analysis": "pages/encounters_analysis.py",
+    "Financials & Coverage": "pages/financials_coverage.py",
+    "Patient Behavior": "pages/patient_behavior.py",
+}
+
+PAGE_ICONS = {
+    "Dashboard Overview": ":material/dashboard:",
+    "Encounters Analysis": ":material/swap_horiz:",
+    "Financials & Coverage": ":material/payments:",
+    "Patient Behavior": ":material/groups:",
+}
+
 with st.sidebar:
     st.title(":material/local_hospital: MGH Analytics")
     st.caption("Massachusetts General Hospital")
-
-pg = st.navigation(
-    [
-        st.Page(
-            "pages/dashboard_overview.py",
-            title="Dashboard Overview",
-            icon=":material/dashboard:",
-            default=True,
-        ),
-        st.Page(
-            "pages/encounters_analysis.py",
-            title="Encounters Analysis",
-            icon=":material/swap_horiz:",
-        ),
-        st.Page(
-            "pages/financials_coverage.py",
-            title="Financials & Coverage",
-            icon=":material/payments:",
-        ),
-        st.Page(
-            "pages/patient_behavior.py",
-            title="Patient Behavior",
-            icon=":material/groups:",
-        ),
-    ]
-)
-
-with st.sidebar:
     st.divider()
+
+    page_selection = st.radio(
+        "Navigation",
+        list(PAGES.keys()),
+        format_func=lambda x: f"{PAGE_ICONS[x]} {x}",
+        label_visibility="collapsed",
+    )
+
+    st.divider()
+
     min_year = int(encounters["YEAR"].min())
     max_year = int(encounters["YEAR"].max())
     selected_years = st.slider("Year Range", min_year, max_year, (min_year, max_year))
@@ -77,4 +73,7 @@ st.session_state["selected_years"] = selected_years
 st.session_state["selected_payers"] = selected_payers
 st.session_state["selected_classes"] = selected_classes
 
-pg.run()
+page_file = PAGES[page_selection]
+with open(page_file, "r") as f:
+    code = compile(f.read(), page_file, "exec")
+    exec(code)
