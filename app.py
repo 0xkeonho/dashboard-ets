@@ -22,32 +22,6 @@ st.session_state["patients"] = patients
 st.session_state["payers"] = payers
 st.session_state["procedures"] = procedures
 
-pg = st.navigation(
-    [
-        st.Page(
-            "pages/dashboard_overview.py",
-            title="Dashboard Overview",
-            icon=":material/dashboard:",
-            default=True,
-        ),
-        st.Page(
-            "pages/encounters_analysis.py",
-            title="Encounters Analysis",
-            icon=":material/swap_horiz:",
-        ),
-        st.Page(
-            "pages/financials_coverage.py",
-            title="Financials & Coverage",
-            icon=":material/payments:",
-        ),
-        st.Page(
-            "pages/patient_behavior.py",
-            title="Patient Behavior",
-            icon=":material/groups:",
-        ),
-    ]
-)
-
 with st.sidebar:
     st.title(":material/local_hospital: MGH Analytics")
     st.caption("Massachusetts General Hospital")
@@ -76,4 +50,30 @@ st.session_state["selected_years"] = selected_years
 st.session_state["selected_payers"] = selected_payers
 st.session_state["selected_classes"] = selected_classes
 
+pg = st.navigation(
+    [
+        st.Page(
+            "pages/dashboard_overview.py",
+            title="Dashboard Overview",
+            icon=":material/dashboard:",
+            default=True,
+        ),
+        st.Page(
+            "pages/encounters_analysis.py",
+            title="Encounters Analysis",
+            icon=":material/swap_horiz:",
+        ),
+        st.Page(
+            "pages/financials_coverage.py",
+            title="Financials & Coverage",
+            icon=":material/payments:",
+        ),
+        st.Page(
+            "pages/patient_behavior.py",
+            title="Patient Behavior",
+            icon=":material/groups:",
+        ),
+    ],
+    position="top",
+)
 pg.run()
