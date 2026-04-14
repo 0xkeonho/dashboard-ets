@@ -444,10 +444,13 @@ def render_kpi_row():
     spark_patients = (
         get_sparkline_data(filtered_encounters, "PATIENT", agg_type="nunique") or []
     )
-    spark_cost = (
-        get_sparkline_data(filtered_encounters, "TOTAL_CLAIM_COST", agg_type="mean")
-        or []
-    )
+    spark_cost = [
+        round(v)
+        for v in (
+            get_sparkline_data(filtered_encounters, "TOTAL_CLAIM_COST", agg_type="mean")
+            or []
+        )
+    ]
     spark_readmit = (
         get_sparkline_data(
             filtered_encounters[filtered_encounters["IS_READMIT_30D"]],
