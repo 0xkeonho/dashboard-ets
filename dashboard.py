@@ -60,12 +60,45 @@ st.markdown(
         font-family: 'Poppins', sans-serif !important;
     }
 
-    /* Sidebar Poppins */
-    section[data-testid="stSidebar"] *, section[data-testid="stSidebar"] {
+    /* Sidebar Styling - Dark Theme */
+    section[data-testid="stSidebar"] {
+        background-color: #1e293b !important;
+    }
+    section[data-testid="stSidebar"] * {
         font-family: 'Poppins', sans-serif !important;
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h4 {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] .stRadio label,
+    section[data-testid="stSidebar"] .stMultiSelect label,
+    section[data-testid="stSidebar"] .stSlider label {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] input,
+    section[data-testid="stSidebar"] .stSelectbox {
+        background-color: #334155 !important;
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] [data-baseweb="select"] {
+        background-color: #334155 !important;
+    }
+    section[data-testid="stSidebar"] [data-baseweb="select"] * {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="select"] {
+        background-color: #334155 !important;
+    }
+    section[data-testid="stSidebar"] .stDivider {
+        border-color: #334155 !important;
     }
 
-    /* Light Theme Headers */
+    /* Light Theme Headers (Main Content) */
     h1, h2, h3, h4, h5, h6 {
         font-weight: 700 !important;
         color: #1e293b !important;
@@ -274,31 +307,30 @@ DISCRETE_COLORS = ["#00c9a7", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#10b9
 encounters, patients, payers, procedures, missing_files = load_data()
 
 if missing_files:
-    st.error(f"⚠️ CSV files not found: {', '.join(missing_files)}")
+    st.error(f"CSV files not found: {', '.join(missing_files)}")
     st.stop()
 
 
 # ==========================================
 # 6. SIDEBAR (NAVIGATION & FILTERS)
 # ==========================================
-st.sidebar.title("🏥 MGH Analytics")
+st.sidebar.title(":material/hospital: MGH Analytics")
 st.sidebar.caption("Massachusetts General Hospital")
 st.sidebar.divider()
 
 page = st.sidebar.radio(
     "Navigation",
     [
-        "📊 Dashboard Overview",
-        "🔄 Encounters Analysis",
-        "💰 Financials & Coverage",
-        "👥 Patient Behavior",
+        ":material/dashboard: Dashboard Overview",
+        ":material/swap_horiz: Encounters Analysis",
+        ":material/payments: Financials & Coverage",
+        ":material/groups: Patient Behavior",
     ],
 )
 
 st.sidebar.divider()
 
-# --- FILTERS ---
-st.sidebar.subheader("🎯 Data Filters")
+st.sidebar.subheader(":material/tune: Data Filters")
 
 # 1. Year Filter
 min_year = int(encounters["YEAR"].min())
@@ -378,7 +410,7 @@ if filtered_encounters.empty:
 # ----------------------------------------
 # PAGE 1: OVERVIEW
 # ----------------------------------------
-if page == "📊 Dashboard Overview":
+if page == ":material/dashboard: Dashboard Overview":
     st.markdown("<h1>Hospital Analytics Dashboard</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Performance Overview (Filtered Data)</div>",
@@ -432,7 +464,7 @@ if page == "📊 Dashboard Overview":
 # ----------------------------------------
 # PAGE 2: ENCOUNTERS (SQL OBJECTIVE 1)
 # ----------------------------------------
-elif page == "🔄 Encounters Analysis":
+elif page == ":material/swap_horiz: Encounters Analysis":
     st.markdown("<h1>Encounters & Visits</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Volume trends, service proportions, and durations.<br/><em>📋 SQL Objective 1: Encounters Overview</em></div>",
@@ -518,7 +550,7 @@ elif page == "🔄 Encounters Analysis":
 # ----------------------------------------
 # PAGE 3: COST & COVERAGE (SQL OBJECTIVE 2)
 # ----------------------------------------
-elif page == "💰 Financials & Coverage":
+elif page == ":material/payments: Financials & Coverage":
     st.markdown("<h1>Financials & Procedures</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Insurance coverage and procedure cost mapping.<br/><em>📋 SQL Objective 2: Cost & Coverage Insights</em></div>",
@@ -700,7 +732,7 @@ elif page == "💰 Financials & Coverage":
 # ----------------------------------------
 # PAGE 4: PATIENT BEHAVIOR (SQL OBJECTIVE 3)
 # ----------------------------------------
-elif page == "👥 Patient Behavior":
+elif page == ":material/groups: Patient Behavior":
     st.markdown("<h1>Patient Behavior Analytics</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Tracking unique patients and readmission trends.<br/><em>📋 SQL Objective 3: Patient Behavior Analysis</em></div>",
