@@ -49,20 +49,6 @@ st.markdown(
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-    /* Streamlit built-in icons - preserve original font */
-    [data-testid="stInfo"] svg,
-    [data-testid="stWarning"] svg,
-    [data-testid="stError"] svg,
-    [data-testid="stSuccess"] svg,
-    [data-testid="stInfo"] span:first-child,
-    [data-testid="stWarning"] span:first-child,
-    [data-testid="stError"] span:first-child,
-    [data-testid="stSuccess"] span:first-child,
-    .stAlert svg, .stAlert span:first-child,
-    svg, svg * {
-        font-family: unset !important;
-    }
-
     /* Material Icons - MUST BE FIRST with highest priority */
     .material-icons,
     .material-symbols-rounded,
@@ -81,8 +67,8 @@ st.markdown(
         font-family: 'Poppins', sans-serif !important;
     }
 
-    /* Regular spans (exclude Material icons and Streamlit icons) */
-    span:not(.material-symbols-rounded):not([class*="material"]):not(:first-child) {
+    /* Regular spans (exclude Material icons) */
+    span:not(.material-symbols-rounded):not([class*="material"]) {
         font-family: 'Poppins', sans-serif !important;
     }
 
@@ -111,8 +97,7 @@ st.markdown(
     section[data-testid="stSidebar"] p {
         color: #f1f5f9 !important;
     }
-    /* Sidebar spans - exclude Material icons and Streamlit icons */
-    section[data-testid="stSidebar"] span:not(.material-symbols-rounded):not([class*="material"]):not(:first-child) {
+    section[data-testid="stSidebar"] span:not(.material-symbols-rounded):not([class*="material"]) {
         color: #f1f5f9 !important;
     }
     section[data-testid="stSidebar"] .stRadio > label {
