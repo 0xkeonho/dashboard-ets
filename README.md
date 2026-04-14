@@ -9,6 +9,12 @@ Dashboard analitik untuk Massachusetts General Hospital.
 ```bash
 git clone https://github.com/0xkeonho/dashboard-ets.git
 cd dashboard-ets
+uv venv && uv pip install -r requirements.txt
+streamlit run app.py
+```
+
+Atau langsung:
+```bash
 uv run streamlit run app.py
 ```
 
