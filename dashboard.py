@@ -32,6 +32,7 @@ sys.modules["orjson"] = None
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+from streamlit_echarts import st_echarts, JsCode
 
 # ==========================================
 # 2. PAGE CONFIGURATION
@@ -325,6 +326,30 @@ chart_config_zoom = {
 DISCRETE_COLORS = ["#00c9a7", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#10b981"]
 
 
+def get_sparkline_data(df, value_col, agg_type="sum", group_col="YEAR"):
+    if df.empty:
+        return None
+    if agg_type == "count":
+        trend = df.groupby(group_col).size().reset_index(name="value")
+    elif agg_type == "nunique":
+        trend = df.groupby(group_col)[value_col].nunique().reset_index(name="value")
+    elif agg_type == "mean":
+        trend = df.groupby(group_col).agg({value_col: "mean"}).reset_index()
+        trend.rename(columns={value_col: "value"}, inplace=True)
+    else:
+        trend = df.groupby(group_col).agg({value_col: "sum"}).reset_index()
+        trend.rename(columns={value_col: "value"}, inplace=True)
+    trend = trend.sort_values(group_col)
+    return trend["value"].tolist()
+
+
+def get_delta(current_val, previous_val):
+    if previous_val is None or previous_val == 0:
+        return None
+    delta_pct = ((current_val - previous_val) / previous_val) * 100
+    return f"{delta_pct:+.1f}%"
+
+
 # ==========================================
 # 5. LOAD DATA
 # ==========================================
@@ -413,17 +438,62 @@ readmitted_patients_count = (
 
 
 def render_kpi_row():
-    st.markdown(
-        f"""
-    <div class="kpi-container">
-        <div class="kpi-card"><div class="kpi-title">Total Encounters</div><div class="kpi-value val-green">{total_encounters:,.0f}</div></div>
-        <div class="kpi-card"><div class="kpi-title">Unique Patients</div><div class="kpi-value val-blue">{unique_patients:,.0f}</div></div>
-        <div class="kpi-card"><div class="kpi-title">Avg Cost / Visit</div><div class="kpi-value val-amber">${avg_cost_per_visit:,.0f}</div></div>
-        <div class="kpi-card"><div class="kpi-title">30-Day Readmissions</div><div class="kpi-value val-red">{readmitted_patients_count:,.0f}</div></div>
-    </div>
-    """,
-        unsafe_allow_html=True,
+    spark_encounters = (
+        get_sparkline_data(filtered_encounters, "Id", agg_type="count") or []
     )
+    spark_patients = (
+        get_sparkline_data(filtered_encounters, "PATIENT", agg_type="nunique") or []
+    )
+    spark_cost = (
+        get_sparkline_data(filtered_encounters, "TOTAL_CLAIM_COST", agg_type="mean")
+        or []
+    )
+    spark_readmit = (
+        get_sparkline_data(
+            filtered_encounters[filtered_encounters["IS_READMIT_30D"]],
+            "PATIENT",
+            agg_type="nunique",
+        )
+        or []
+    )
+
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.metric(
+            label="Total Encounters",
+            value=f"{total_encounters:,}",
+            border=True,
+            chart_data=spark_encounters if len(spark_encounters) > 1 else None,
+            chart_type="bar",
+        )
+
+    with col2:
+        st.metric(
+            label="Unique Patients",
+            value=f"{unique_patients:,}",
+            border=True,
+            chart_data=spark_patients if len(spark_patients) > 1 else None,
+            chart_type="line",
+        )
+
+    with col3:
+        st.metric(
+            label="Avg Cost / Visit",
+            value=f"${avg_cost_per_visit:,.0f}",
+            border=True,
+            chart_data=spark_cost if len(spark_cost) > 1 else None,
+            chart_type="area",
+        )
+
+    with col4:
+        st.metric(
+            label="30-Day Readmissions",
+            value=f"{readmitted_patients_count:,}",
+            border=True,
+            chart_data=spark_readmit if len(spark_readmit) > 1 else None,
+            chart_type="bar",
+        )
 
 
 if filtered_encounters.empty:
@@ -453,17 +523,44 @@ if page == ":material/dashboard: Dashboard Overview":
             .reset_index(name="Total Encounters")
         )
         enc_year.rename(columns={"YEAR": "Year"}, inplace=True)
-        fig = px.bar(
-            enc_year,
-            x="Year",
-            y="Total Encounters",
-            template="plotly_white",
-            color_discrete_sequence=["#10b981"],
-            text="Total Encounters",
-        )
-        fig.update_traces(textposition="outside")
-        fig = style_plotly(fig)
-        st.plotly_chart(fig, use_container_width=True, config=chart_config)
+
+        years = enc_year["Year"].astype(str).tolist()
+        values = enc_year["Total Encounters"].tolist()
+
+        echarts_bar_opts = {
+            "title": {"text": "Annual Encounters", "left": "center", "top": 5},
+            "toolbox": {
+                "feature": {
+                    "saveAsImage": {},
+                    "dataView": {"readOnly": True},
+                    "restore": {},
+                    "magicType": {"type": ["line", "bar"]},
+                }
+            },
+            "tooltip": {
+                "trigger": "axis",
+                "formatter": JsCode(
+                    "function(p){ return p[0].name + '<br/>Encounters: ' + p[0].value.toLocaleString(); }"
+                ).js_code,
+            },
+            "xAxis": {"type": "category", "data": years},
+            "yAxis": {"type": "value"},
+            "dataZoom": [
+                {"type": "inside", "start": 0, "end": 100},
+                {"type": "slider", "start": 0, "end": 100, "height": 20, "bottom": 30},
+            ],
+            "grid": {"bottom": "18%"},
+            "series": [
+                {
+                    "name": "Total Encounters",
+                    "type": "bar",
+                    "data": values,
+                    "itemStyle": {"color": "#10b981"},
+                    "label": {"show": True, "position": "top"},
+                }
+            ],
+        }
+        st_echarts(options=echarts_bar_opts, height="400px", key="enc_volume_trend")
 
     with col2:
         st.subheader("Encounter Class Distribution")
@@ -500,17 +597,44 @@ elif page == ":material/swap_horiz: Encounters Analysis":
         filtered_encounters.groupby("YEAR").size().reset_index(name="Total Encounters")
     )
     enc_year.rename(columns={"YEAR": "Year"}, inplace=True)
-    fig1 = px.bar(
-        enc_year,
-        x="Year",
-        y="Total Encounters",
-        template="plotly_white",
-        color_discrete_sequence=["#3b82f6"],
-        text="Total Encounters",
-    )
-    fig1.update_traces(textposition="outside")
-    fig1 = style_plotly(fig1)
-    st.plotly_chart(fig1, use_container_width=True, config=chart_config)
+
+    years = enc_year["Year"].astype(str).tolist()
+    values = enc_year["Total Encounters"].tolist()
+
+    echarts_annual_opts = {
+        "title": {"text": "Annual Visit Volume", "left": "center", "top": 5},
+        "toolbox": {
+            "feature": {
+                "saveAsImage": {},
+                "dataView": {"readOnly": True},
+                "restore": {},
+                "magicType": {"type": ["line", "bar"]},
+            }
+        },
+        "tooltip": {
+            "trigger": "axis",
+            "formatter": JsCode(
+                "function(p){ return p[0].name + '<br/>Visits: ' + p[0].value.toLocaleString(); }"
+            ).js_code,
+        },
+        "xAxis": {"type": "category", "data": years},
+        "yAxis": {"type": "value"},
+        "dataZoom": [
+            {"type": "inside", "start": 0, "end": 100},
+            {"type": "slider", "start": 0, "end": 100, "height": 20, "bottom": 30},
+        ],
+        "grid": {"bottom": "18%"},
+        "series": [
+            {
+                "name": "Total Encounters",
+                "type": "bar",
+                "data": values,
+                "itemStyle": {"color": "#3b82f6"},
+                "label": {"show": True, "position": "top"},
+            }
+        ],
+    }
+    st_echarts(options=echarts_annual_opts, height="400px", key="annual_visit_volume")
 
     st.subheader("Encounter Class Proportion per Year")
     class_yr = (
