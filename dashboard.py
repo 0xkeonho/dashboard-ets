@@ -207,6 +207,7 @@ st.markdown(
 # 4. LOAD & PREP DATA FUNCTION (CACHED)
 # ==========================================
 @st.cache_data
+@st.cache_data
 def load_data():
     DATA_PATH = "data"
     required_files = [
