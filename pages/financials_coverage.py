@@ -1,15 +1,27 @@
 import streamlit as st
 from utils import (
+    apply_filters,
     calc_delta,
     ECHARTS_BASE,
     PAYER_TYPE,
 )
 from streamlit_echarts import st_echarts, JsCode
 
-filtered_encounters = st.session_state.get("filtered_encounters")
-filtered_procedures = st.session_state.get("filtered_procedures")
+encounters = st.session_state.get("encounters")
+procedures = st.session_state.get("procedures")
+selected_years = st.session_state.get("selected_years")
+selected_payers = st.session_state.get("selected_payers")
+selected_classes = st.session_state.get("selected_classes")
 
-if filtered_encounters is None or filtered_encounters.empty:
+if encounters is None or encounters.empty:
+    st.warning("No data available.")
+    st.stop()
+
+filtered_encounters, filtered_procedures = apply_filters(
+    encounters, procedures, selected_years, selected_payers, selected_classes
+)
+
+if filtered_encounters.empty:
     st.warning("No data available for the selected filters.")
     st.stop()
 
