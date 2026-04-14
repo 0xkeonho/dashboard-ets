@@ -1,6 +1,5 @@
-streamlit==1.28.0
-pandas==2.0.3
-plotly==5.18.0
-matplotlib==3.7.1
+streamlit
+pandas
+plotly
+matplotlib
 streamlit-echarts==0.4.0
-pyarrow==14.0.1
