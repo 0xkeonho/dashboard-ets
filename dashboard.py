@@ -10,18 +10,18 @@ os.makedirs(".streamlit", exist_ok=True)
 config_path = ".streamlit/config.toml"
 with open(config_path, "w") as f:
     f.write("""[theme]
-base="dark"
+base="light"
 primaryColor="#8b5cf6"
-backgroundColor="#080d14"
-secondaryBackgroundColor="#0e1621"
-textColor="#e2eaf6"
+backgroundColor="#ffffff"
+secondaryBackgroundColor="#f8fafc"
+textColor="#1e293b"
 font="sans serif"
 baseRadius = "12px"
 
 [theme.sidebar]
-backgroundColor = "#0e1621"
-textColor = "#e2eaf6"
-secondaryBackgroundColor = "#1a2738"
+backgroundColor = "#1e293b"
+textColor = "#f1f5f9"
+secondaryBackgroundColor = "#334155"
 """)
 
 # ==========================================
@@ -65,9 +65,10 @@ st.markdown(
         font-family: 'Poppins', sans-serif !important;
     }
 
+    /* Light Theme Headers */
     h1, h2, h3, h4, h5, h6 {
         font-weight: 700 !important;
-        color: #e2eaf6 !important;
+        color: #1e293b !important;
     }
 
     h1 { font-size: 2.2rem !important; margin-bottom: 0.2rem !important; }
@@ -77,13 +78,13 @@ st.markdown(
     /* Subtitle / Caption styling */
     .page-subtitle {
         font-size: 1rem;
-        color: #6b8099;
+        color: #64748b;
         margin-bottom: 2rem;
         font-weight: 400;
         font-family: 'Poppins', sans-serif !important;
     }
 
-    /* Premium KPI Cards */
+    /* Premium KPI Cards - Light Theme */
     .kpi-container {
         display: flex;
         gap: 1rem;
@@ -91,22 +92,22 @@ st.markdown(
         font-family: 'Poppins', sans-serif !important;
     }
     .kpi-card {
-        background-color: #0e1621;
-        border: 1px solid #1e2f45;
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
         border-radius: 12px;
         padding: 24px;
         flex: 1;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transition: transform 0.2s, border-color 0.2s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+        transition: transform 0.2s, box-shadow 0.2s;
         font-family: 'Poppins', sans-serif !important;
     }
     .kpi-card:hover {
         transform: translateY(-2px);
-        border-color: #8b5cf6;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .kpi-title {
         font-size: 0.85rem;
-        color: #6b8099;
+        color: #64748b;
         text-transform: uppercase;
         font-weight: 600;
         letter-spacing: 0.5px;
@@ -121,24 +122,24 @@ st.markdown(
     }
 
     /* Colors */
-    .val-green { color: #00c9a7; }
+    .val-green { color: #10b981; }
     .val-blue  { color: #3b82f6; }
     .val-amber { color: #f59e0b; }
     .val-red   { color: #ef4444; }
 
-    /* Insight Box */
+    /* Insight Box - Light Theme */
     .insight-box {
-        background-color: rgba(0, 201, 167, 0.08);
-        border: 1px solid rgba(0, 201, 167, 0.2);
-        border-left: 4px solid #00c9a7;
+        background-color: rgba(16, 185, 129, 0.08);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-left: 4px solid #10b981;
         padding: 16px 20px;
         border-radius: 8px;
         margin-top: 1rem;
         font-size: 0.95rem;
-        color: #e2eaf6;
+        color: #1e293b;
         line-height: 1.6;
     }
-    .insight-box strong { color: #00c9a7; font-weight: 600; }
+    .insight-box strong { color: #059669; font-weight: 600; }
     </style>
 """,
     unsafe_allow_html=True,
@@ -212,26 +213,30 @@ def style_plotly(fig, add_zoom=False):
     fig.update_layout(
         font_family="Poppins",
         title_font_family="Poppins",
-        paper_bgcolor="rgba(0,0,0,0)",
-        plot_bgcolor="rgba(0,0,0,0)",
-        hoverlabel=dict(bgcolor="#0e1621", font_size=13, font_family="Poppins"),
+        paper_bgcolor="rgba(255,255,255,0)",
+        plot_bgcolor="rgba(255,255,255,0)",
+        hoverlabel=dict(
+            bgcolor="#ffffff", font_size=13, font_family="Poppins", font_color="#1e293b"
+        ),
         margin=dict(l=10, r=10, t=40, b=10),
     )
     if add_zoom:
         fig.update_xaxes(
             showgrid=False,
             zeroline=False,
-            title_font=dict(size=13),
-            rangeslider=dict(visible=True, bgcolor="#0e1621", thickness=0.15),
+            title_font=dict(size=13, color="#1e293b"),
+            rangeslider=dict(visible=True, bgcolor="#f1f5f9", thickness=0.15),
         )
     else:
-        fig.update_xaxes(showgrid=False, zeroline=False, title_font=dict(size=13))
+        fig.update_xaxes(
+            showgrid=False, zeroline=False, title_font=dict(size=13, color="#1e293b")
+        )
     fig.update_yaxes(
         showgrid=True,
         gridwidth=1,
-        gridcolor="#1e2f45",
+        gridcolor="#e2e8f0",
         zeroline=False,
-        title_font=dict(size=13),
+        title_font=dict(size=13, color="#1e293b"),
     )
     return fig
 
@@ -391,8 +396,8 @@ if page == "📊 Dashboard Overview":
             enc_year,
             x="Year",
             y="Total Encounters",
-            template="plotly_dark",
-            color_discrete_sequence=["#00c9a7"],
+            template="plotly_white",
+            color_discrete_sequence=["#10b981"],
             text="Total Encounters",
         )
         fig.update_traces(textposition="outside")
@@ -408,13 +413,13 @@ if page == "📊 Dashboard Overview":
             names="Encounter Class",
             values="Total Encounters",
             hole=0.65,
-            template="plotly_dark",
+            template="plotly_white",
             color_discrete_sequence=DISCRETE_COLORS,
         )
         fig2.update_layout(
             legend=dict(orientation="h", y=-0.2, x=0.5, xanchor="center")
         )
-        fig2.update_traces(marker=dict(line=dict(color="#0e1621", width=3)))
+        fig2.update_traces(marker=dict(line=dict(color="#ffffff", width=3)))
         fig2 = style_plotly(fig2)
         st.plotly_chart(fig2, use_container_width=True, config=chart_config)
 
@@ -438,7 +443,7 @@ elif page == "🔄 Encounters Analysis":
         enc_year,
         x="Year",
         y="Total Encounters",
-        template="plotly_dark",
+        template="plotly_white",
         color_discrete_sequence=["#3b82f6"],
         text="Total Encounters",
     )
@@ -463,7 +468,7 @@ elif page == "🔄 Encounters Analysis":
         x="Year",
         y="Proportion (%)",
         color="Encounter Class",
-        template="plotly_dark",
+        template="plotly_white",
         barmode="stack",
         color_discrete_sequence=DISCRETE_COLORS,
     )
@@ -487,14 +492,14 @@ elif page == "🔄 Encounters Analysis":
             names="Duration Category",
             values="Total Encounters",
             hole=0.65,
-            template="plotly_dark",
+            template="plotly_white",
             color_discrete_sequence=["#00c9a7", "#ef4444"],
         )
         fig3.update_layout(showlegend=False)
         fig3.update_traces(
             textposition="inside",
             textinfo="percent+label",
-            marker=dict(line=dict(color="#080d14", width=3)),
+            marker=dict(line=dict(color="#ffffff", width=3)),
         )
         fig3 = style_plotly(fig3)
         st.plotly_chart(fig3, use_container_width=True, config=chart_config)
@@ -544,14 +549,14 @@ elif page == "💰 Financials & Coverage":
             names="Status",
             values="Count",
             hole=0.65,
-            template="plotly_dark",
+            template="plotly_white",
             color_discrete_sequence=["#10b981", "#ef4444"],
         )
         fig_cov.update_layout(showlegend=False)
         fig_cov.update_traces(
             textposition="inside",
             textinfo="percent+label",
-            marker=dict(line=dict(color="#080d14", width=3)),
+            marker=dict(line=dict(color="#ffffff", width=3)),
         )
         fig_cov = style_plotly(fig_cov)
         st.plotly_chart(fig_cov, use_container_width=True, config=chart_config)
@@ -574,7 +579,7 @@ elif page == "💰 Financials & Coverage":
             x="Avg Cost",
             y="Payer",
             orientation="h",
-            template="plotly_dark",
+            template="plotly_white",
             color_discrete_sequence=["#f59e0b"],
             text="Label",
         )
@@ -604,7 +609,7 @@ elif page == "💰 Financials & Coverage":
         x="Coverage Rate (%)",
         y="PAYER_NAME",
         orientation="h",
-        template="plotly_dark",
+        template="plotly_white",
         color_discrete_sequence=["#10b981"],
         text="Label",
         range_x=[0, 100],
@@ -632,7 +637,7 @@ elif page == "💰 Financials & Coverage":
         y="PAYER_NAME",
         x=["PAYER_COVERAGE", "Out of Pocket"],
         orientation="h",
-        template="plotly_dark",
+        template="plotly_white",
         color_discrete_map={"PAYER_COVERAGE": "#10b981", "Out of Pocket": "#ef4444"},
         labels={
             "PAYER_COVERAGE": "Coverage ($)",
@@ -723,13 +728,13 @@ elif page == "👥 Patient Behavior":
         x="Quarter",
         y="Unique Patients",
         markers=True,
-        template="plotly_dark",
+        template="plotly_white",
         color_discrete_sequence=["#00c9a7"],
     )
     fig_qtr.update_traces(
         fill="tozeroy",
         line=dict(width=3),
-        marker=dict(size=8, color="#00c9a7", line=dict(width=2, color="#080d14")),
+        marker=dict(size=8, color="#10b981", line=dict(width=2, color="#ffffff")),
     )
     fig_qtr = style_plotly(fig_qtr, add_zoom=True)
     st.plotly_chart(fig_qtr, use_container_width=True, config=chart_config_zoom)
@@ -751,14 +756,14 @@ elif page == "👥 Patient Behavior":
             names="Status",
             values="Patients",
             hole=0.65,
-            template="plotly_dark",
+            template="plotly_white",
             color_discrete_sequence=["#ef4444", "#3b82f6"],
         )
         fig_readmit.update_layout(showlegend=False)
         fig_readmit.update_traces(
             textposition="inside",
             textinfo="percent+label",
-            marker=dict(line=dict(color="#080d14", width=3)),
+            marker=dict(line=dict(color="#ffffff", width=3)),
         )
         fig_readmit = style_plotly(fig_readmit)
         st.plotly_chart(fig_readmit, use_container_width=True, config=chart_config)
@@ -805,7 +810,7 @@ elif page == "👥 Patient Behavior":
         x="Readmissions",
         y="ENCOUNTERCLASS",
         orientation="h",
-        template="plotly_dark",
+        template="plotly_white",
         color_discrete_sequence=["#ef4444"],
         text="Label",
     )
@@ -830,7 +835,7 @@ elif page == "👥 Patient Behavior":
         x="Readmissions",
         y="PAYER_NAME",
         orientation="h",
-        template="plotly_dark",
+        template="plotly_white",
         color_discrete_sequence=["#f59e0b"],
         text="Label",
     )
