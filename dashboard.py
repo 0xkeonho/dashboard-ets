@@ -343,13 +343,6 @@ def get_sparkline_data(df, value_col, agg_type="sum", group_col="YEAR"):
     return trend["value"].tolist()
 
 
-def get_delta(current_val, previous_val):
-    if previous_val is None or previous_val == 0:
-        return None
-    delta_pct = ((current_val - previous_val) / previous_val) * 100
-    return f"{delta_pct:+.1f}%"
-
-
 # ==========================================
 # 5. LOAD DATA
 # ==========================================
@@ -437,6 +430,36 @@ readmitted_patients_count = (
 )
 
 
+def calc_delta(current_val, previous_val):
+    if previous_val is None or previous_val == 0:
+        return None
+    delta_pct = ((current_val - previous_val) / previous_val) * 100
+    return f"{delta_pct:+.1f}%"
+
+
+years_available = sorted(filtered_encounters["YEAR"].unique())
+if len(years_available) >= 2:
+    current_year = years_available[-1]
+    prev_year = years_available[-2]
+
+    curr_enc = filtered_encounters[filtered_encounters["YEAR"] == current_year]
+    prev_enc = filtered_encounters[filtered_encounters["YEAR"] == prev_year]
+
+    delta_encounters = calc_delta(len(curr_enc), len(prev_enc))
+    delta_patients = calc_delta(
+        curr_enc["PATIENT"].nunique(), prev_enc["PATIENT"].nunique()
+    )
+    delta_cost = calc_delta(
+        curr_enc["TOTAL_CLAIM_COST"].mean(), prev_enc["TOTAL_CLAIM_COST"].mean()
+    )
+
+    curr_readmit = curr_enc[curr_enc["IS_READMIT_30D"]]["PATIENT"].nunique()
+    prev_readmit = prev_enc[prev_enc["IS_READMIT_30D"]]["PATIENT"].nunique()
+    delta_readmit = calc_delta(curr_readmit, prev_readmit)
+else:
+    delta_encounters = delta_patients = delta_cost = delta_readmit = None
+
+
 def render_kpi_row():
     spark_encounters = (
         get_sparkline_data(filtered_encounters, "Id", agg_type="count") or []
@@ -466,6 +489,7 @@ def render_kpi_row():
         st.metric(
             label="Total Encounters",
             value=f"{total_encounters:,}",
+            delta=delta_encounters,
             border=True,
             chart_data=spark_encounters if len(spark_encounters) > 1 else None,
             chart_type="bar",
@@ -475,6 +499,7 @@ def render_kpi_row():
         st.metric(
             label="Unique Patients",
             value=f"{unique_patients:,}",
+            delta=delta_patients,
             border=True,
             chart_data=spark_patients if len(spark_patients) > 1 else None,
             chart_type="line",
@@ -484,6 +509,7 @@ def render_kpi_row():
         st.metric(
             label="Avg Cost / Visit",
             value=f"${avg_cost_per_visit:,.0f}",
+            delta=delta_cost,
             border=True,
             chart_data=spark_cost if len(spark_cost) > 1 else None,
             chart_type="area",
@@ -493,6 +519,7 @@ def render_kpi_row():
         st.metric(
             label="30-Day Readmissions",
             value=f"{readmitted_patients_count:,}",
+            delta=delta_readmit,
             border=True,
             chart_data=spark_readmit if len(spark_readmit) > 1 else None,
             chart_type="bar",
