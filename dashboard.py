@@ -38,7 +38,7 @@ import plotly.express as px
 # ==========================================
 st.set_page_config(
     page_title="MGH Hospital Analytics",
-    page_icon="🏥",
+    page_icon=":material/local_hospital:",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -423,7 +423,7 @@ def render_kpi_row():
 
 
 if filtered_encounters.empty:
-    st.warning("⚠️ No data available for the selected filters.")
+    st.warning("No data available for the selected filters.")
     st.stop()
 
 
@@ -487,7 +487,7 @@ if page == ":material/dashboard: Dashboard Overview":
 elif page == ":material/swap_horiz: Encounters Analysis":
     st.markdown("<h1>Encounters & Visits</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<div class='page-subtitle'>Volume trends, service proportions, and durations.<br/><em>📋 SQL Objective 1: Encounters Overview</em></div>",
+        "<div class='page-subtitle'>Volume trends, service proportions, and durations.<br/><em>SQL Objective 1: Encounters Overview</em></div>",
         unsafe_allow_html=True,
     )
 
@@ -573,7 +573,7 @@ elif page == ":material/swap_horiz: Encounters Analysis":
 elif page == ":material/payments: Financials & Coverage":
     st.markdown("<h1>Financials & Procedures</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<div class='page-subtitle'>Insurance coverage and procedure cost mapping.<br/><em>📋 SQL Objective 2: Cost & Coverage Insights</em></div>",
+        "<div class='page-subtitle'>Insurance coverage and procedure cost mapping.<br/><em>SQL Objective 2: Cost & Coverage Insights</em></div>",
         unsafe_allow_html=True,
     )
 
@@ -755,7 +755,7 @@ elif page == ":material/payments: Financials & Coverage":
 elif page == ":material/groups: Patient Behavior":
     st.markdown("<h1>Patient Behavior Analytics</h1>", unsafe_allow_html=True)
     st.markdown(
-        "<div class='page-subtitle'>Tracking unique patients and readmission trends.<br/><em>📋 SQL Objective 3: Patient Behavior Analysis</em></div>",
+        "<div class='page-subtitle'>Tracking unique patients and readmission trends.<br/><em>SQL Objective 3: Patient Behavior Analysis</em></div>",
         unsafe_allow_html=True,
     )
 
