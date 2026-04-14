@@ -454,7 +454,7 @@ if filtered_encounters.empty:
 # ----------------------------------------
 # PAGE 1: OVERVIEW
 # ----------------------------------------
-if page == ":material/dashboard: Dashboard Overview":
+if page == "Dashboard Overview":
     st.markdown("<h1>Hospital Analytics Dashboard</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Performance Overview (Filtered Data)</div>",
@@ -508,7 +508,7 @@ if page == ":material/dashboard: Dashboard Overview":
 # ----------------------------------------
 # PAGE 2: ENCOUNTERS (SQL OBJECTIVE 1)
 # ----------------------------------------
-elif page == ":material/swap_horiz: Encounters Analysis":
+elif page == "Encounters Analysis":
     st.markdown("<h1>Encounters & Visits</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Volume trends, service proportions, and durations.<br/><em>📋 SQL Objective 1: Encounters Overview</em></div>",
@@ -594,7 +594,7 @@ elif page == ":material/swap_horiz: Encounters Analysis":
 # ----------------------------------------
 # PAGE 3: COST & COVERAGE (SQL OBJECTIVE 2)
 # ----------------------------------------
-elif page == ":material/payments: Financials & Coverage":
+elif page == "Financials & Coverage":
     st.markdown("<h1>Financials & Procedures</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Insurance coverage and procedure cost mapping.<br/><em>📋 SQL Objective 2: Cost & Coverage Insights</em></div>",
@@ -776,7 +776,7 @@ elif page == ":material/payments: Financials & Coverage":
 # ----------------------------------------
 # PAGE 4: PATIENT BEHAVIOR (SQL OBJECTIVE 3)
 # ----------------------------------------
-elif page == ":material/groups: Patient Behavior":
+elif page == "Patient Behavior":
     st.markdown("<h1>Patient Behavior Analytics</h1>", unsafe_allow_html=True)
     st.markdown(
         "<div class='page-subtitle'>Tracking unique patients and readmission trends.<br/><em>📋 SQL Objective 3: Patient Behavior Analysis</em></div>",
