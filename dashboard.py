@@ -272,29 +272,31 @@ def style_plotly(fig, add_zoom=False, x_title=None, y_title=None):
         ),
         margin=dict(l=10, r=10, t=40, b=10),
     )
+
+    xaxis_config = {
+        "showgrid": False,
+        "zeroline": False,
+    }
+    if x_title:
+        xaxis_config["title_text"] = x_title
+        xaxis_config["title_font"] = dict(size=13, color="#1e293b")
     if add_zoom:
-        fig.update_xaxes(
-            showgrid=False,
-            zeroline=False,
-            title_text=x_title if x_title else "",
-            title_font=dict(size=13, color="#1e293b"),
-            rangeslider=dict(visible=True, bgcolor="#f1f5f9", thickness=0.15),
+        xaxis_config["rangeslider"] = dict(
+            visible=True, bgcolor="#f1f5f9", thickness=0.15
         )
-    else:
-        fig.update_xaxes(
-            showgrid=False,
-            zeroline=False,
-            title_text=x_title if x_title else "",
-            title_font=dict(size=13, color="#1e293b"),
-        )
-    fig.update_yaxes(
-        showgrid=True,
-        gridwidth=1,
-        gridcolor="#e2e8f0",
-        zeroline=False,
-        title_text=y_title if y_title else "",
-        title_font=dict(size=13, color="#1e293b"),
-    )
+    fig.update_xaxes(**xaxis_config)
+
+    yaxis_config = {
+        "showgrid": True,
+        "gridwidth": 1,
+        "gridcolor": "#e2e8f0",
+        "zeroline": False,
+    }
+    if y_title:
+        yaxis_config["title_text"] = y_title
+        yaxis_config["title_font"] = dict(size=13, color="#1e293b")
+    fig.update_yaxes(**yaxis_config)
+
     return fig
 
 
