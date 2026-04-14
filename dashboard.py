@@ -47,12 +47,9 @@ st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-    /* Global Font (Poppins) - Applied Everywhere */
-    *, *::before, *::after {
-        font-family: 'Poppins', sans-serif !important;
-    }
-
+    /* Global Font (Poppins) - EXCLUDE Material Icons */
     html, body, [class*="css"], [class*="st-"], p, span, div,
     h1, h2, h3, h4, h5, h6, label, li, a, button, input, select,
     textarea, th, td, code, pre, .stMarkdown, .stCaption, .stHeader,
@@ -60,29 +57,51 @@ st.markdown(
         font-family: 'Poppins', sans-serif !important;
     }
 
+    /* Material Icons - DO NOT OVERRIDE */
+    .material-icons, .material-symbols-rounded,
+    span[class*="material"], [data-testid*="material"],
+    [data-testid="stMarkdownContainer"] span:first-child {
+        font-family: 'Material Symbols Rounded' !important;
+    }
+
     /* Sidebar Styling - Dark Theme */
     section[data-testid="stSidebar"] {
         background-color: #1e293b !important;
     }
-    section[data-testid="stSidebar"] * {
-        font-family: 'Poppins', sans-serif !important;
+    section[data-testid="stSidebar"] > div > div {
         color: #f1f5f9 !important;
     }
-    section[data-testid="stSidebar"] h1,
-    section[data-testid="stSidebar"] h2,
-    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h1 {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] h2 {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] h3 {
+        color: #f1f5f9 !important;
+    }
     section[data-testid="stSidebar"] h4 {
         color: #f1f5f9 !important;
     }
-    section[data-testid="stSidebar"] label,
-    section[data-testid="stSidebar"] .stRadio label,
-    section[data-testid="stSidebar"] .stMultiSelect label,
-    section[data-testid="stSidebar"] .stSlider label {
+    section[data-testid="stSidebar"] label {
         color: #f1f5f9 !important;
     }
-    section[data-testid="stSidebar"] input,
-    section[data-testid="stSidebar"] .stSelectbox {
-        background-color: #334155 !important;
+    section[data-testid="stSidebar"] p {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] span {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] .stRadio > label {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] .stRadio div {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] [data-baseweb="radio"] {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] [data-baseweb="radio"] * {
         color: #f1f5f9 !important;
     }
     section[data-testid="stSidebar"] [data-baseweb="select"] {
@@ -91,15 +110,32 @@ st.markdown(
     section[data-testid="stSidebar"] [data-baseweb="select"] * {
         color: #f1f5f9 !important;
     }
+    section[data-testid="stSidebar"] .stSlider label {
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] .stMultiSelect label {
+        color: #f1f5f9 !important;
+    }
     section[data-testid="stSidebar"] .stMultiSelect [data-baseweb="select"] {
         background-color: #334155 !important;
     }
-    section[data-testid="stSidebar"] .stDivider {
-        border-color: #334155 !important;
+    section[data-testid="stSidebar"] input {
+        background-color: #334155 !important;
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] .stCaption {
+        color: #94a3b8 !important;
+    }
+    section[data-testid="stSidebar"] [data-testid="stInfo"] {
+        background-color: #334155 !important;
+        color: #f1f5f9 !important;
+    }
+    section[data-testid="stSidebar"] [data-testid="stInfo"] * {
+        color: #f1f5f9 !important;
     }
 
     /* Light Theme Headers (Main Content) */
-    h1, h2, h3, h4, h5, h6 {
+    .main h1, .main h2, .main h3, .main h4, .main h5, .main h6 {
         font-weight: 700 !important;
         color: #1e293b !important;
     }
@@ -314,23 +350,54 @@ if missing_files:
 # ==========================================
 # 6. SIDEBAR (NAVIGATION & FILTERS)
 # ==========================================
-st.sidebar.title(":material/hospital: MGH Analytics")
-st.sidebar.caption("Massachusetts General Hospital")
+st.sidebar.markdown(
+    """
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem;">
+        <span class="material-symbols-rounded" style="font-size: 28px; color: #f1f5f9;">local_hospital</span>
+        <h1 style="margin: 0; font-size: 1.5rem; color: #f1f5f9; font-family: 'Poppins', sans-serif; font-weight: 700;">MGH Analytics</h1>
+    </div>
+    <p style="margin: 0; color: #94a3b8; font-size: 0.85rem; font-family: 'Poppins', sans-serif;">Massachusetts General Hospital</p>
+""",
+    unsafe_allow_html=True,
+)
 st.sidebar.divider()
 
-page = st.sidebar.radio(
-    "Navigation",
-    [
-        ":material/dashboard: Dashboard Overview",
-        ":material/swap_horiz: Encounters Analysis",
-        ":material/payments: Financials & Coverage",
-        ":material/groups: Patient Behavior",
-    ],
+st.sidebar.markdown(
+    '<p style="color: #94a3b8; font-size: 0.75rem; font-family: Poppins, sans-serif; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem;">Navigation</p>',
+    unsafe_allow_html=True,
 )
 
+nav_options = [
+    ("dashboard", "Dashboard Overview"),
+    ("swap_horiz", "Encounters Analysis"),
+    ("payments", "Financials & Coverage"),
+    ("groups", "Patient Behavior"),
+]
+
+page_labels = [
+    f'<span class="material-symbols-rounded" style="font-size: 18px; vertical-align: middle; margin-right: 6px;">{icon}</span>{label}'
+    for icon, label in nav_options
+]
+
+selected_page = st.sidebar.radio(
+    " ",
+    [label for _, label in nav_options],
+    format_func=lambda x: x,
+)
+
+page = selected_page
+
 st.sidebar.divider()
 
-st.sidebar.subheader(":material/tune: Data Filters")
+st.sidebar.markdown(
+    """
+    <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 0.5rem;">
+        <span class="material-symbols-rounded" style="font-size: 20px; color: #f1f5f9;">tune</span>
+        <h3 style="margin: 0; color: #f1f5f9; font-family: 'Poppins', sans-serif; font-weight: 600;">Data Filters</h3>
+    </div>
+""",
+    unsafe_allow_html=True,
+)
 
 # 1. Year Filter
 min_year = int(encounters["YEAR"].min())
