@@ -16,6 +16,12 @@ backgroundColor="#080d14"
 secondaryBackgroundColor="#0e1621"
 textColor="#e2eaf6"
 font="sans serif"
+baseRadius = "12px"
+
+[theme.sidebar]
+backgroundColor = "#0e1621"
+textColor = "#e2eaf6"
+secondaryBackgroundColor = "#1a2738"
 """)
 
 # ==========================================
@@ -189,8 +195,7 @@ def load_data():
     return encounters, patients, payers, procedures, []
 
 
-# Utility function for Plotly
-def style_plotly(fig):
+def style_plotly(fig, add_zoom=False):
     fig.update_layout(
         font_family="Poppins",
         title_font_family="Poppins",
@@ -199,7 +204,15 @@ def style_plotly(fig):
         hoverlabel=dict(bgcolor="#0e1621", font_size=13, font_family="Poppins"),
         margin=dict(l=10, r=10, t=40, b=10),
     )
-    fig.update_xaxes(showgrid=False, zeroline=False, title_font=dict(size=13))
+    if add_zoom:
+        fig.update_xaxes(
+            showgrid=False,
+            zeroline=False,
+            title_font=dict(size=13),
+            rangeslider=dict(visible=True, bgcolor="#0e1621", thickness=0.15),
+        )
+    else:
+        fig.update_xaxes(showgrid=False, zeroline=False, title_font=dict(size=13))
     fig.update_yaxes(
         showgrid=True,
         gridwidth=1,
@@ -214,8 +227,19 @@ def style_plotly(fig):
 chart_config = {
     "displayModeBar": True,
     "displaylogo": False,
+    "scrollZoom": True,
     "toImageButtonOptions": {"format": "png", "filename": "mgh_analytics_export"},
     "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+}
+
+# Chart config with range slider for time series
+chart_config_zoom = {
+    "displayModeBar": True,
+    "displaylogo": False,
+    "scrollZoom": True,
+    "toImageButtonOptions": {"format": "png", "filename": "mgh_analytics_export"},
+    "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+    "modeBarButtonsToAdd": ["drawrect", "eraseshape"],
 }
 
 DISCRETE_COLORS = ["#00c9a7", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#10b981"]
@@ -694,8 +718,8 @@ elif page == "👥 Patient Behavior":
         line=dict(width=3),
         marker=dict(size=8, color="#00c9a7", line=dict(width=2, color="#080d14")),
     )
-    fig_qtr = style_plotly(fig_qtr)
-    st.plotly_chart(fig_qtr, use_container_width=True, config=chart_config)
+    fig_qtr = style_plotly(fig_qtr, add_zoom=True)
+    st.plotly_chart(fig_qtr, use_container_width=True, config=chart_config_zoom)
 
     col1, col2 = st.columns([1, 1.2])
     with col1:
