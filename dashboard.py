@@ -546,19 +546,38 @@ if page == ":material/dashboard: Dashboard Overview":
     col1, col2 = st.columns([2, 1])
 
     with col1:
-        st.subheader("Encounter Volume Trend")
-        enc_year = (
-            filtered_encounters.groupby("YEAR")
+        st.subheader("Monthly Encounter Trend")
+        latest_year = int(filtered_encounters["YEAR"].max())
+        monthly_data = (
+            filtered_encounters[filtered_encounters["YEAR"] == latest_year]
+            .groupby("MONTH")
             .size()
             .reset_index(name="Total Encounters")
         )
-        enc_year.rename(columns={"YEAR": "Year"}, inplace=True)
+        monthly_data = monthly_data.sort_values("MONTH")
+        month_names = [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+        ]
+        months = [month_names[m - 1] for m in monthly_data["MONTH"].tolist()]
+        values = monthly_data["Total Encounters"].tolist()
 
-        years = enc_year["Year"].astype(str).tolist()
-        values = enc_year["Total Encounters"].tolist()
-
-        echarts_bar_opts = {
-            "title": {"text": "Annual Encounters", "left": "center", "top": 5},
+        echarts_monthly_opts = {
+            "title": {
+                "text": f"Encounters in {latest_year}",
+                "left": "center",
+                "top": 5,
+            },
             "toolbox": {
                 "feature": {
                     "saveAsImage": {},
@@ -573,7 +592,7 @@ if page == ":material/dashboard: Dashboard Overview":
                     "function(p){ return p[0].name + '<br/>Encounters: ' + p[0].value.toLocaleString(); }"
                 ).js_code,
             },
-            "xAxis": {"type": "category", "data": years},
+            "xAxis": {"type": "category", "data": months},
             "yAxis": {"type": "value"},
             "dataZoom": [
                 {"type": "inside", "start": 0, "end": 100},
@@ -583,14 +602,18 @@ if page == ":material/dashboard: Dashboard Overview":
             "series": [
                 {
                     "name": "Total Encounters",
-                    "type": "bar",
+                    "type": "line",
                     "data": values,
+                    "smooth": True,
                     "itemStyle": {"color": "#10b981"},
+                    "areaStyle": {"opacity": 0.3},
                     "label": {"show": True, "position": "top"},
                 }
             ],
         }
-        st_echarts(options=echarts_bar_opts, height="400px", key="enc_volume_trend")
+        st_echarts(
+            options=echarts_monthly_opts, height="400px", key="monthly_encounter_trend"
+        )
 
     with col2:
         st.subheader("Encounter Class Distribution")
