@@ -326,6 +326,11 @@ chart_config_zoom = {
 
 DISCRETE_COLORS = ["#00c9a7", "#3b82f6", "#f59e0b", "#ef4444", "#8b5cf6", "#10b981"]
 
+ECHARTS_BASE = {
+    "backgroundColor": "#ffffff",
+    "textStyle": {"color": "#1e293b", "fontFamily": "Poppins"},
+}
+
 
 def get_sparkline_data(df, value_col, agg_type="sum", group_col="YEAR"):
     if df.empty:
@@ -569,11 +574,14 @@ if page == ":material/dashboard: Dashboard Overview":
         values = monthly_data["Total Encounters"].tolist()
 
         echarts_monthly_opts = {
+            **ECHARTS_BASE,
             "title": {
                 "text": "Last 12 Months Encounters",
                 "left": "center",
                 "top": 5,
+                "textStyle": {"color": "#1e293b", "fontFamily": "Poppins"},
             },
+            "legend": {"textStyle": {"color": "#1e293b"}},
             "toolbox": {
                 "feature": {
                     "saveAsImage": {},
@@ -588,8 +596,18 @@ if page == ":material/dashboard: Dashboard Overview":
                     "function(p){ return p[0].name + '<br/>Encounters: ' + p[0].value.toLocaleString(); }"
                 ).js_code,
             },
-            "xAxis": {"type": "category", "data": months, "axisLabel": {"rotate": 45}},
-            "yAxis": {"type": "value"},
+            "xAxis": {
+                "type": "category",
+                "data": months,
+                "axisLabel": {"rotate": 45, "color": "#1e293b"},
+                "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+            },
+            "yAxis": {
+                "type": "value",
+                "axisLabel": {"color": "#1e293b"},
+                "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+                "splitLine": {"lineStyle": {"color": "#e2e8f0"}},
+            },
             "dataZoom": [
                 {"type": "inside", "start": 0, "end": 100},
                 {"type": "slider", "start": 0, "end": 100, "height": 20, "bottom": 30},
@@ -602,8 +620,8 @@ if page == ":material/dashboard: Dashboard Overview":
                     "data": values,
                     "smooth": True,
                     "itemStyle": {"color": "#10b981"},
-                    "areaStyle": {"opacity": 0.3},
-                    "label": {"show": True, "position": "top"},
+                    "areaStyle": {"opacity": 0.3, "color": "#10b981"},
+                    "label": {"show": True, "position": "top", "color": "#1e293b"},
                 }
             ],
         }
@@ -651,7 +669,14 @@ elif page == ":material/swap_horiz: Encounters Analysis":
     values = enc_year["Total Encounters"].tolist()
 
     echarts_annual_opts = {
-        "title": {"text": "Annual Visit Volume", "left": "center", "top": 5},
+        **ECHARTS_BASE,
+        "title": {
+            "text": "Annual Visit Volume",
+            "left": "center",
+            "top": 5,
+            "textStyle": {"color": "#1e293b", "fontFamily": "Poppins"},
+        },
+        "legend": {"textStyle": {"color": "#1e293b"}},
         "toolbox": {
             "feature": {
                 "saveAsImage": {},
@@ -666,8 +691,18 @@ elif page == ":material/swap_horiz: Encounters Analysis":
                 "function(p){ return p[0].name + '<br/>Visits: ' + p[0].value.toLocaleString(); }"
             ).js_code,
         },
-        "xAxis": {"type": "category", "data": years},
-        "yAxis": {"type": "value"},
+        "xAxis": {
+            "type": "category",
+            "data": years,
+            "axisLabel": {"color": "#1e293b"},
+            "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+        },
+        "yAxis": {
+            "type": "value",
+            "axisLabel": {"color": "#1e293b"},
+            "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+            "splitLine": {"lineStyle": {"color": "#e2e8f0"}},
+        },
         "dataZoom": [
             {"type": "inside", "start": 0, "end": 100},
             {"type": "slider", "start": 0, "end": 100, "height": 20, "bottom": 30},
@@ -679,7 +714,7 @@ elif page == ":material/swap_horiz: Encounters Analysis":
                 "type": "bar",
                 "data": values,
                 "itemStyle": {"color": "#3b82f6"},
-                "label": {"show": True, "position": "top"},
+                "label": {"show": True, "position": "top", "color": "#1e293b"},
             }
         ],
     }
@@ -697,18 +732,78 @@ elif page == ":material/swap_horiz: Encounters Analysis":
     class_yr.rename(
         columns={"YEAR": "Year", "ENCOUNTERCLASS": "Encounter Class"}, inplace=True
     )
-    fig2 = px.bar(
-        class_yr,
-        x="Year",
-        y="Proportion (%)",
-        color="Encounter Class",
-        template="plotly_white",
-        barmode="stack",
-        color_discrete_sequence=DISCRETE_COLORS,
+
+    years = sorted(class_yr["Year"].unique())
+    classes = class_yr["Encounter Class"].unique().tolist()
+
+    series_data = []
+    for i, enc_class in enumerate(classes):
+        class_data = []
+        for year in years:
+            row = class_yr[
+                (class_yr["Year"] == year) & (class_yr["Encounter Class"] == enc_class)
+            ]
+            val = row["Proportion (%)"].values[0] if len(row) > 0 else 0
+            class_data.append(round(val, 1))
+        series_data.append(
+            {
+                "name": enc_class,
+                "type": "bar",
+                "stack": "total",
+                "data": class_data,
+                "itemStyle": {"color": DISCRETE_COLORS[i % len(DISCRETE_COLORS)]},
+                "emphasis": {"focus": "series"},
+            }
+        )
+
+    echarts_class_opts = {
+        **ECHARTS_BASE,
+        "title": {
+            "text": "Encounter Class Proportion per Year",
+            "left": "center",
+            "top": 5,
+            "textStyle": {"color": "#1e293b", "fontFamily": "Poppins"},
+        },
+        "legend": {
+            "top": 30,
+            "textStyle": {"color": "#1e293b"},
+        },
+        "toolbox": {
+            "feature": {
+                "saveAsImage": {},
+                "dataView": {"readOnly": True},
+                "restore": {},
+            }
+        },
+        "tooltip": {
+            "trigger": "axis",
+            "axisPointer": {"type": "shadow"},
+            "formatter": JsCode(
+                "function(p){ let total = p.reduce((s, i) => s + i.value, 0); return p.map(i => i.seriesName + ': ' + i.value.toFixed(1) + '%').join('<br/>'); }"
+            ).js_code,
+        },
+        "xAxis": {
+            "type": "category",
+            "data": [str(y) for y in years],
+            "axisLabel": {"color": "#1e293b"},
+            "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+        },
+        "yAxis": {
+            "type": "value",
+            "axisLabel": {"color": "#1e293b", "formatter": "{value}%"},
+            "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+            "splitLine": {"lineStyle": {"color": "#e2e8f0"}},
+        },
+        "dataZoom": [
+            {"type": "inside", "start": 0, "end": 100},
+            {"type": "slider", "start": 0, "end": 100, "height": 20, "bottom": 30},
+        ],
+        "grid": {"bottom": "18%", "top": "22%"},
+        "series": series_data,
+    }
+    st_echarts(
+        options=echarts_class_opts, height="450px", key="encounter_class_proportion"
     )
-    fig2.update_layout(legend=dict(orientation="h", y=-0.2, title=None))
-    fig2 = style_plotly(fig2)
-    st.plotly_chart(fig2, use_container_width=True, config=chart_config)
 
     st.subheader("Encounter Duration Analysis")
     col1, col2 = st.columns([1, 1.5])
