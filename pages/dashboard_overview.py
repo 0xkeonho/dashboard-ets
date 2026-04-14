@@ -124,7 +124,7 @@ def render_kpi_row():
 
 st.markdown("<h1>Hospital Analytics Dashboard</h1>", unsafe_allow_html=True)
 st.markdown(
-    "<div class='page-subtitle'>Performance Overview (Filtered Data)</div>",
+    "<div class='page-subtitle'>Performance Overview</div>",
     unsafe_allow_html=True,
 )
 
