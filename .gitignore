@@ -5,4 +5,13 @@ output/
 
 # Root CSV files (duplicates of data/)
 /*.csv
-!data/*.csv
+
+# Large files
+*.zip
+*.pdf
+create_hospital_db.sql
+
+# Virtual environment
+venv/
+.venv/
+env/
