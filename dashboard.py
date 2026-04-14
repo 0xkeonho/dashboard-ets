@@ -49,19 +49,27 @@ st.markdown(
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
-    /* Global Font (Poppins) - EXCLUDE Material Icons */
-    html, body, [class*="css"], [class*="st-"], p, span, div,
+    /* Material Icons - MUST BE FIRST with highest priority */
+    .material-icons,
+    .material-symbols-rounded,
+    span.material-symbols-rounded,
+    span[class*="material-symbols"],
+    [class*="material-symbols"] {
+        font-family: 'Material Symbols Rounded' !important;
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* Global Font (Poppins) - applied after Material Icons */
+    html, body, [class*="css"], [class*="st-"], p, div,
     h1, h2, h3, h4, h5, h6, label, li, a, button, input, select,
     textarea, th, td, code, pre, .stMarkdown, .stCaption, .stHeader,
     .stMetric, .stDataFrame, .stPlotlyChart, .element-container {
         font-family: 'Poppins', sans-serif !important;
     }
 
-    /* Material Icons - DO NOT OVERRIDE */
-    .material-icons, .material-symbols-rounded,
-    span[class*="material"], [data-testid*="material"],
-    [data-testid="stMarkdownContainer"] span:first-child {
-        font-family: 'Material Symbols Rounded' !important;
+    /* Regular spans (exclude Material icons) */
+    span:not(.material-symbols-rounded):not([class*="material"]) {
+        font-family: 'Poppins', sans-serif !important;
     }
 
     /* Sidebar Styling - Dark Theme */
@@ -89,7 +97,8 @@ st.markdown(
     section[data-testid="stSidebar"] p {
         color: #f1f5f9 !important;
     }
-    section[data-testid="stSidebar"] span {
+    /* Sidebar spans - exclude Material icons */
+    section[data-testid="stSidebar"] span:not(.material-symbols-rounded):not([class*="material"]) {
         color: #f1f5f9 !important;
     }
     section[data-testid="stSidebar"] .stRadio > label {
@@ -374,15 +383,9 @@ nav_options = [
     ("groups", "Patient Behavior"),
 ]
 
-page_labels = [
-    f'<span class="material-symbols-rounded" style="font-size: 18px; vertical-align: middle; margin-right: 6px;">{icon}</span>{label}'
-    for icon, label in nav_options
-]
-
 selected_page = st.sidebar.radio(
     " ",
     [label for _, label in nav_options],
-    format_func=lambda x: x,
 )
 
 page = selected_page
