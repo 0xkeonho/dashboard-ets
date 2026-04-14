@@ -229,6 +229,7 @@ def load_data():
     encounters["START"] = pd.to_datetime(encounters["START"]).dt.tz_localize(None)
     encounters["STOP"] = pd.to_datetime(encounters["STOP"]).dt.tz_localize(None)
     encounters["YEAR"] = encounters["START"].dt.year
+    encounters["MONTH"] = encounters["START"].dt.month
     encounters["QUARTER"] = encounters["START"].dt.to_period("Q").astype(str)
 
     # Standardize Encounter Class naming format
