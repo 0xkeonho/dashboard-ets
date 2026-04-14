@@ -49,6 +49,10 @@ st.markdown(
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
+    /* Main Content - White Background */
+    .main, .stApp { background-color: #ffffff !important; }
+    [data-testid="stMainBlockContainer"] { background-color: #ffffff !important; }
+
     /* DO NOT TOUCH PLOTLY CHARTS */
     .js-plotly-plot, .plotly, .modebar, .plot-container,
     [data-testid="stPlotlyChart"], .stPlotlyChart {
