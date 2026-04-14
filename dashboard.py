@@ -548,34 +548,29 @@ if page == ":material/dashboard: Dashboard Overview":
 
     with col1:
         st.subheader("Monthly Encounter Trend")
-        latest_year = int(filtered_encounters["YEAR"].max())
+
+        encounters_sorted = filtered_encounters.sort_values("START")
+        latest_date = encounters_sorted["START"].max()
+        start_date = latest_date - pd.DateOffset(months=12)
+        last_12_months = filtered_encounters[
+            (filtered_encounters["START"] >= start_date)
+            & (filtered_encounters["START"] <= latest_date)
+        ].copy()
+
+        last_12_months["YEAR_MONTH"] = last_12_months["START"].dt.to_period("M")
         monthly_data = (
-            filtered_encounters[filtered_encounters["YEAR"] == latest_year]
-            .groupby("MONTH")
+            last_12_months.groupby("YEAR_MONTH")
             .size()
             .reset_index(name="Total Encounters")
         )
-        monthly_data = monthly_data.sort_values("MONTH")
-        month_names = [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-        ]
-        months = [month_names[m - 1] for m in monthly_data["MONTH"].tolist()]
+        monthly_data = monthly_data.sort_values("YEAR_MONTH")
+
+        months = [str(m) for m in monthly_data["YEAR_MONTH"].tolist()]
         values = monthly_data["Total Encounters"].tolist()
 
         echarts_monthly_opts = {
             "title": {
-                "text": f"Encounters in {latest_year}",
+                "text": "Last 12 Months Encounters",
                 "left": "center",
                 "top": 5,
             },
@@ -593,13 +588,13 @@ if page == ":material/dashboard: Dashboard Overview":
                     "function(p){ return p[0].name + '<br/>Encounters: ' + p[0].value.toLocaleString(); }"
                 ).js_code,
             },
-            "xAxis": {"type": "category", "data": months},
+            "xAxis": {"type": "category", "data": months, "axisLabel": {"rotate": 45}},
             "yAxis": {"type": "value"},
             "dataZoom": [
                 {"type": "inside", "start": 0, "end": 100},
                 {"type": "slider", "start": 0, "end": 100, "height": 20, "bottom": 30},
             ],
-            "grid": {"bottom": "18%"},
+            "grid": {"bottom": "22%", "left": "8%"},
             "series": [
                 {
                     "name": "Total Encounters",
