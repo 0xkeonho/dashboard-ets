@@ -364,6 +364,10 @@ def calc_delta(current_val, previous_val):
 # 6. SIDEBAR FILTERS
 # ==========================================
 def render_sidebar_filters(encounters):
+    st.sidebar.title(":material/local_hospital: MGH Analytics")
+    st.sidebar.caption("Massachusetts General Hospital")
+    st.sidebar.divider()
+
     min_year = int(encounters["YEAR"].min())
     max_year = int(encounters["YEAR"].max())
     selected_years = st.sidebar.slider(
