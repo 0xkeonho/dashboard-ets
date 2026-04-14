@@ -43,17 +43,25 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ==========================================
-# 3. UI / UX & CLEAN CSS STYLING
-# ==========================================
-# CSS sekarang hanya fokus pada KPI Card dan Font, tanpa merusak widget bawaan
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
-    /* Global Font (Poppins) */
-    html, body, [class*="css"], p, span, h1, h2, h3, h4, h5, h6, label, li {
+    /* Global Font (Poppins) - Applied Everywhere */
+    *, *::before, *::after {
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    html, body, [class*="css"], [class*="st-"], p, span, div,
+    h1, h2, h3, h4, h5, h6, label, li, a, button, input, select,
+    textarea, th, td, code, pre, .stMarkdown, .stCaption, .stHeader,
+    .stMetric, .stDataFrame, .stPlotlyChart, .element-container {
+        font-family: 'Poppins', sans-serif !important;
+    }
+
+    /* Sidebar Poppins */
+    section[data-testid="stSidebar"] *, section[data-testid="stSidebar"] {
         font-family: 'Poppins', sans-serif !important;
     }
 
@@ -72,6 +80,7 @@ st.markdown(
         color: #6b8099;
         margin-bottom: 2rem;
         font-weight: 400;
+        font-family: 'Poppins', sans-serif !important;
     }
 
     /* Premium KPI Cards */
@@ -79,6 +88,7 @@ st.markdown(
         display: flex;
         gap: 1rem;
         margin-bottom: 2rem;
+        font-family: 'Poppins', sans-serif !important;
     }
     .kpi-card {
         background-color: #0e1621;
@@ -88,25 +98,28 @@ st.markdown(
         flex: 1;
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         transition: transform 0.2s, border-color 0.2s;
+        font-family: 'Poppins', sans-serif !important;
     }
     .kpi-card:hover {
         transform: translateY(-2px);
-        border-color: #8b5cf6; 
+        border-color: #8b5cf6;
     }
-    .kpi-title { 
-        font-size: 0.85rem; 
-        color: #6b8099; 
-        text-transform: uppercase; 
-        font-weight: 600; 
+    .kpi-title {
+        font-size: 0.85rem;
+        color: #6b8099;
+        text-transform: uppercase;
+        font-weight: 600;
         letter-spacing: 0.5px;
+        font-family: 'Poppins', sans-serif !important;
     }
-    .kpi-value { 
-        font-size: 2.2rem; 
-        font-weight: 800; 
-        margin: 8px 0; 
+    .kpi-value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        margin: 8px 0;
         line-height: 1.2;
+        font-family: 'Poppins', sans-serif !important;
     }
-    
+
     /* Colors */
     .val-green { color: #00c9a7; }
     .val-blue  { color: #3b82f6; }
