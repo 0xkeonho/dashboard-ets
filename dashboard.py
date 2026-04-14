@@ -209,7 +209,7 @@ def load_data():
     return encounters, patients, payers, procedures, []
 
 
-def style_plotly(fig, add_zoom=False):
+def style_plotly(fig, add_zoom=False, x_title=None, y_title=None):
     fig.update_layout(
         font_family="Poppins",
         title_font_family="Poppins",
@@ -224,18 +224,23 @@ def style_plotly(fig, add_zoom=False):
         fig.update_xaxes(
             showgrid=False,
             zeroline=False,
+            title_text=x_title if x_title else "",
             title_font=dict(size=13, color="#1e293b"),
             rangeslider=dict(visible=True, bgcolor="#f1f5f9", thickness=0.15),
         )
     else:
         fig.update_xaxes(
-            showgrid=False, zeroline=False, title_font=dict(size=13, color="#1e293b")
+            showgrid=False,
+            zeroline=False,
+            title_text=x_title if x_title else "",
+            title_font=dict(size=13, color="#1e293b"),
         )
     fig.update_yaxes(
         showgrid=True,
         gridwidth=1,
         gridcolor="#e2e8f0",
         zeroline=False,
+        title_text=y_title if y_title else "",
         title_font=dict(size=13, color="#1e293b"),
     )
     return fig
