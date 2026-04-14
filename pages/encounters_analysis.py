@@ -2,9 +2,6 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 from utils import (
-    load_data,
-    render_sidebar_filters,
-    apply_filters,
     ECHARTS_BASE,
     DISCRETE_COLORS,
     CHART_CONFIG,
@@ -18,18 +15,10 @@ st.set_page_config(
     layout="wide",
 )
 
-encounters, patients, payers, procedures, missing_files = load_data()
+filtered_encounters = st.session_state.get("filtered_encounters")
+filtered_procedures = st.session_state.get("filtered_procedures")
 
-if missing_files:
-    st.error(f"CSV files not found: {', '.join(missing_files)}")
-    st.stop()
-
-selected_years, selected_payers, selected_classes = render_sidebar_filters(encounters)
-filtered_encounters, filtered_procedures = apply_filters(
-    encounters, procedures, selected_years, selected_payers, selected_classes
-)
-
-if filtered_encounters.empty:
+if filtered_encounters is None or filtered_encounters.empty:
     st.warning("No data available for the selected filters.")
     st.stop()
 
