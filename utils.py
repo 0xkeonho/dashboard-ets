@@ -234,7 +234,7 @@ PAYER_TYPE = {
 # ==========================================
 # 4. DATA LOADING
 # ==========================================
-@st.cache_data
+@st.cache_data(show_spinner=False)
 def load_data():
     DATA_PATH = "data"
     required_files = [
