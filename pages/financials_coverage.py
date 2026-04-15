@@ -244,35 +244,61 @@ st.divider()
 st.subheader("Medical Procedures Mapping")
 st.caption("Procedure frequency and average cost analysis.")
 if not filtered_procedures.empty:
-    proc_stats = (
+    # Top 10 Frequency
+    proc_freq = (
         filtered_procedures.groupby("DESCRIPTION")
         .agg(
-            Times_Performed=("DESCRIPTION", "size"),
-            Avg_Base_Cost=("BASE_COST", "mean"),
+            Frequency=("DESCRIPTION", "size"),
+            Avg_Cost=("BASE_COST", "mean"),
+            Total_Cost=("BASE_COST", "sum"),
         )
         .reset_index()
     )
-    proc_stats.rename(
-        columns={
-            "DESCRIPTION": "Procedure",
-            "Times_Performed": "Count",
-            "Avg_Base_Cost": "Avg Cost ($)",
-        },
-        inplace=True,
+    proc_freq.rename(columns={"DESCRIPTION": "Procedure"}, inplace=True)
+    proc_freq = proc_freq.nlargest(10, "Frequency")
+
+    # Top 10 by Average Cost with Reason
+    proc_avg = (
+        filtered_procedures.groupby("DESCRIPTION")
+        .agg(
+            Avg_Cost=("BASE_COST", "mean"),
+            Frequency=("DESCRIPTION", "size"),
+            Total_Cost=("BASE_COST", "sum"),
+        )
+        .reset_index()
     )
+    proc_avg.rename(columns={"DESCRIPTION": "Procedure"}, inplace=True)
+
+    # Get top reason for each procedure
+    reason_map = (
+        filtered_procedures.groupby("DESCRIPTION")["REASONDESCRIPTION"]
+        .agg(lambda x: x.value_counts().index[0] if x.notna().any() else "-")
+        .to_dict()
+    )
+    proc_avg["Reason"] = proc_avg["Procedure"].map(reason_map)
+    proc_avg = proc_avg.nlargest(10, "Avg_Cost")
+
     col_a, col_b = st.columns(2)
     with col_a:
         st.markdown("**Top 10 Frequency**")
+        display_freq = proc_freq[
+            ["Procedure", "Frequency", "Avg_Cost", "Total_Cost"]
+        ].copy()
         st.dataframe(
-            proc_stats.nlargest(10, "Count").style.format({"Avg Cost ($)": "${:,.2f}"}),
+            display_freq.style.format(
+                {"Avg_Cost": "${:,.0f}", "Total_Cost": "${:,.0f}"}
+            ),
             use_container_width=True,
             hide_index=True,
         )
     with col_b:
-        st.markdown("**Top 10 High Cost**")
+        st.markdown("**Top 10 by Avg Cost**")
+        display_avg = proc_avg[
+            ["Procedure", "Avg_Cost", "Frequency", "Total_Cost", "Reason"]
+        ].copy()
         st.dataframe(
-            proc_stats.nlargest(10, "Avg Cost ($)").style.format(
-                {"Avg Cost ($)": "${:,.2f}"}
+            display_avg.style.format(
+                {"Avg_Cost": "${:,.0f}", "Total_Cost": "${:,.0f}"}
             ),
             use_container_width=True,
             hide_index=True,
