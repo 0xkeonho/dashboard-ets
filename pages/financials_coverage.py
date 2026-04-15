@@ -241,6 +241,71 @@ st_echarts(options=echarts_breakdown_opts, height="400px", key="coverage_vs_oop"
 
 st.divider()
 
+st.subheader("Total Cost by Encounter Class")
+st.caption("Breakdown of total costs by encounter type.")
+cost_by_class = (
+    filtered_encounters.groupby("ENCOUNTERCLASS")["TOTAL_CLAIM_COST"]
+    .sum()
+    .sort_values(ascending=True)
+    .reset_index()
+)
+cost_by_class.columns = ["Encounter Class", "Total Cost"]
+
+classes_cost = cost_by_class["Encounter Class"].tolist()
+costs = cost_by_class["Total Cost"].tolist()
+
+echarts_cost_class_opts = {
+    **ECHARTS_BASE,
+    "toolbox": {
+        "feature": {
+            "saveAsImage": {},
+            "dataView": {"readOnly": True},
+            "restore": {},
+        }
+    },
+    "tooltip": {
+        "trigger": "axis",
+        "axisPointer": {"type": "shadow"},
+        "formatter": JsCode(
+            "function(p){ return p[0].name + '<br/>Total Cost: $' + p[0].value.toLocaleString(); }"
+        ).js_code,
+    },
+    "xAxis": {
+        "type": "value",
+        "axisLabel": {"color": "#1e293b", "formatter": "${value}"},
+        "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+        "splitLine": {"lineStyle": {"color": "#e2e8f0"}},
+    },
+    "yAxis": {
+        "type": "category",
+        "data": classes_cost,
+        "axisLabel": {"color": "#1e293b"},
+        "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+    },
+    "grid": {"left": "15%", "right": "10%", "bottom": "15%"},
+    "series": [
+        {
+            "name": "Total Cost",
+            "type": "bar",
+            "data": costs,
+            "itemStyle": {"color": "#f59e0b"},
+            "label": {
+                "show": True,
+                "position": "right",
+                "color": "#1e293b",
+                "formatter": JsCode(
+                    "function(p){ return '$' + (p.value/1000000).toFixed(1) + 'M'; }"
+                ).js_code,
+            },
+        }
+    ],
+}
+st_echarts(
+    options=echarts_cost_class_opts, height="350px", key="cost_by_encounter_class"
+)
+
+st.divider()
+
 st.subheader("Medical Procedures Mapping")
 st.caption("Procedure frequency and average cost analysis.")
 if not filtered_procedures.empty:
@@ -321,6 +386,5 @@ st.markdown(
     """
 - **Program Financial Assistance untuk NO_INSURANCE** — $49.3M uncollected, perlu charity care program atau sliding scale payment.
 - **Investigasi Private Insurance** — Coverage 0% untuk Humana, Aetna, dll merupakan anomali data yang perlu dicek.
-- **Revenue cycle optimization** — Focus pada encounter class dengan high cost: urgentcare ($6,369 avg) dan inpatient ($7,761 avg).
 """
 )

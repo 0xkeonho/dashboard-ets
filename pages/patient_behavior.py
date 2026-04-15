@@ -389,12 +389,71 @@ st_echarts(
 
 st.divider()
 
+st.subheader("Top 10 Diagnosis/Reasons")
+st.caption("Most common reasons for patient encounters.")
+top_reasons = (
+    filtered_encounters["REASONDESCRIPTION"].value_counts().head(10).reset_index()
+)
+top_reasons.columns = ["Diagnosis", "Count"]
+top_reasons = top_reasons.sort_values("Count", ascending=True)
+
+diagnoses = top_reasons["Diagnosis"].tolist()
+diag_counts = top_reasons["Count"].tolist()
+
+echarts_diagnosis_opts = {
+    **ECHARTS_BASE,
+    "toolbox": {
+        "feature": {
+            "saveAsImage": {},
+            "dataView": {"readOnly": True},
+            "restore": {},
+        }
+    },
+    "tooltip": {
+        "trigger": "axis",
+        "axisPointer": {"type": "shadow"},
+        "formatter": JsCode(
+            "function(p){ return p[0].name + '<br/>Count: ' + p[0].value.toLocaleString(); }"
+        ).js_code,
+    },
+    "xAxis": {
+        "type": "value",
+        "axisLabel": {"color": "#1e293b"},
+        "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+        "splitLine": {"lineStyle": {"color": "#e2e8f0"}},
+    },
+    "yAxis": {
+        "type": "category",
+        "data": diagnoses,
+        "axisLabel": {"color": "#1e293b"},
+        "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+    },
+    "grid": {"left": "35%", "right": "10%", "bottom": "15%"},
+    "series": [
+        {
+            "name": "Count",
+            "type": "bar",
+            "data": diag_counts,
+            "itemStyle": {"color": "#10b981"},
+            "label": {
+                "show": True,
+                "position": "right",
+                "color": "#1e293b",
+                "formatter": JsCode(
+                    "function(p){ return p.value.toLocaleString(); }"
+                ).js_code,
+            },
+        }
+    ],
+}
+st_echarts(options=echarts_diagnosis_opts, height="400px", key="top_diagnoses")
+
+st.divider()
+
 st.subheader("Key Insights")
 st.markdown(
     """
-- **Readmission rate 60.2% SANGAT TINGGI** — Industry benchmark untuk 30-day readmission adalah 15-20%. MGH memiliki 3x lipat dari normal.
 - **Chronic conditions driver utama** — Heart failure dan hyperlipidemia adalah penyakit kronis yang butuh long-term management.
-- **Super-utilizers** — 9 pasien (1%) = 19.6% dari total encounters, menunjukkan small group yang memakan resource besar.
 - **NO_INSURANCE & Medicare readmission tinggi** — Populasi vulnerable tanpa atau dengan limited coverage cenderung readmit lebih sering.
 """
 )
@@ -404,7 +463,5 @@ st.markdown(
     """
 - **Care Transitions Program** — 60% readmission mengindikasikan issue discharge planning. Perlu follow-up post-discharge.
 - **Disease Management Program untuk chronic conditions** — Heart failure adalah top diagnosis. Program self-management education bisa kurangi readmission.
-- **Case Management untuk super-utilizers** — 9 pasien = 20% encounters. Intervention targeted untuk mereka akan berdampak besar.
-- **Target NO_INSURANCE & Medicare population** — Mereka readmit paling banyak. Perlu social work + community resources integration.
 """
 )

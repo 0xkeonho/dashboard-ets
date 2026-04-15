@@ -351,19 +351,65 @@ with drill_col2:
 
 st.divider()
 
+st.subheader("Encounters by Hour of Day")
+st.caption("Distribution of encounters across 24-hour periods.")
+filtered_encounters["HOUR"] = filtered_encounters["START"].dt.hour
+hour_dist = filtered_encounters.groupby("HOUR").size().reset_index(name="Count")
+hours = hour_dist["HOUR"].tolist()
+counts = hour_dist["Count"].tolist()
+
+echarts_hour_opts = {
+    **ECHARTS_BASE,
+    "toolbox": {
+        "feature": {
+            "saveAsImage": {},
+            "dataView": {"readOnly": True},
+            "restore": {},
+        }
+    },
+    "tooltip": {
+        "trigger": "axis",
+        "formatter": JsCode(
+            "function(p){ return 'Hour ' + p[0].name + ':00<br/>Encounters: ' + p[0].value.toLocaleString(); }"
+        ).js_code,
+    },
+    "xAxis": {
+        "type": "category",
+        "data": [str(h) for h in hours],
+        "axisLabel": {"color": "#1e293b"},
+        "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+    },
+    "yAxis": {
+        "type": "value",
+        "axisLabel": {"color": "#1e293b"},
+        "axisLine": {"lineStyle": {"color": "#cbd5e1"}},
+        "splitLine": {"lineStyle": {"color": "#e2e8f0"}},
+    },
+    "grid": {"left": "10%", "right": "5%", "bottom": "15%"},
+    "series": [
+        {
+            "name": "Encounters",
+            "type": "bar",
+            "data": counts,
+            "itemStyle": {"color": "#8b5cf6"},
+        }
+    ],
+}
+st_echarts(options=echarts_hour_opts, height="350px", key="encounters_by_hour")
+
+st.divider()
+
 st.subheader("Key Insights")
 st.markdown(
     """
 - **Ambulatory mendominasi (45%)** — MGH adalah rumah sakit dengan fokus rawat jalan, bukan rawat inap.
 - **Peak hour jam 02:00** — Tingginya kunjungan di malam hari, kemungkinan besar untuk kasus emergency/urgent care.
-- **Trend kunjungan naik** — Pertumbuhan dari 2011-2014, stabil 2015-2020, dan lonjakan di 2021.
 """
 )
 
 st.subheader("Recommendations")
 st.markdown(
     """
-- **Evaluasi kapasitas ambulatory** — 45% beban di ambulatory, perlu dipastikan kapasitas cukup saat jam sibuk (pagi-siang).
 - **Optimasi staffing malam** — Peak hour jam 02:00 membutuhkan staff lebih banyak untuk handle urgent/emergency.
 """
 )
