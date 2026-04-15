@@ -386,3 +386,25 @@ echarts_readmit_payer_opts = {
 st_echarts(
     options=echarts_readmit_payer_opts, height="400px", key="readmissions_by_payer"
 )
+
+st.divider()
+
+st.subheader("Key Insights")
+st.markdown(
+    """
+- **Readmission rate 60.2% SANGAT TINGGI** — Industry benchmark untuk 30-day readmission adalah 15-20%. MGH memiliki 3x lipat dari normal.
+- **Chronic conditions driver utama** — Heart failure dan hyperlipidemia adalah penyakit kronis yang butuh long-term management.
+- **Super-utilizers** — 9 pasien (1%) = 19.6% dari total encounters, menunjukkan small group yang memakan resource besar.
+- **NO_INSURANCE & Medicare readmission tinggi** — Populasi vulnerable tanpa atau dengan limited coverage cenderung readmit lebih sering.
+"""
+)
+
+st.subheader("Recommendations")
+st.markdown(
+    """
+- **Care Transitions Program** — 60% readmission mengindikasikan issue discharge planning. Perlu follow-up post-discharge.
+- **Disease Management Program untuk chronic conditions** — Heart failure adalah top diagnosis. Program self-management education bisa kurangi readmission.
+- **Case Management untuk super-utilizers** — 9 pasien = 20% encounters. Intervention targeted untuk mereka akan berdampak besar.
+- **Target NO_INSURANCE & Medicare population** — Mereka readmit paling banyak. Perlu social work + community resources integration.
+"""
+)

@@ -348,3 +348,22 @@ with drill_col2:
         )
     else:
         st.info("No encounters under 24 hours.")
+
+st.divider()
+
+st.subheader("Key Insights")
+st.markdown(
+    """
+- **Ambulatory mendominasi (45%)** — MGH adalah rumah sakit dengan fokus rawat jalan, bukan rawat inap.
+- **Peak hour jam 02:00** — Tingginya kunjungan di malam hari, kemungkinan besar untuk kasus emergency/urgent care.
+- **Trend kunjungan naik** — Pertumbuhan dari 2011-2014, stabil 2015-2020, dan lonjakan di 2021.
+"""
+)
+
+st.subheader("Recommendations")
+st.markdown(
+    """
+- **Evaluasi kapasitas ambulatory** — 45% beban di ambulatory, perlu dipastikan kapasitas cukup saat jam sibuk (pagi-siang).
+- **Optimasi staffing malam** — Peak hour jam 02:00 membutuhkan staff lebih banyak untuk handle urgent/emergency.
+"""
+)

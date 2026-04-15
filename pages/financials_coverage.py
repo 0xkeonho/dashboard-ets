@@ -303,3 +303,24 @@ if not filtered_procedures.empty:
             use_container_width=True,
             hide_index=True,
         )
+
+st.divider()
+
+st.subheader("Key Insights")
+st.markdown(
+    """
+- **NO_INSURANCE = Beban terbesar** — $49.3M biaya tidak tertanggung, pasien harus bayar sendiri (self-pay).
+- **Private Insurance hampir 0% coverage** — Humana, Aetna, UnitedHealthcare, Anthem tidak membayar hampir sama sekali. Ini anomali data yang perlu diinvestigasi.
+- **Government payer coverage tinggi** — Medicaid (94%), Medicare (78%), Dual Eligible (89%) menunjukkan program pemerintah lebih reliable dalam coverage.
+- **Ambulatory = Cost center terbesar** — $36.3M (41% total cost), namun per-encounter cost rendah ($2,894).
+"""
+)
+
+st.subheader("Recommendations")
+st.markdown(
+    """
+- **Program Financial Assistance untuk NO_INSURANCE** — $49.3M uncollected, perlu charity care program atau sliding scale payment.
+- **Investigasi Private Insurance** — Coverage 0% untuk Humana, Aetna, dll merupakan anomali data yang perlu dicek.
+- **Revenue cycle optimization** — Focus pada encounter class dengan high cost: urgentcare ($6,369 avg) dan inpatient ($7,761 avg).
+"""
+)
